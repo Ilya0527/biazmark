@@ -11,16 +11,24 @@ class OpenAIMedia(BaseMediaProvider):
     name = "openai"
 
     def is_configured(self) -> bool:
-        return bool(get_settings().openai_api_key)
+        s = get_settings()
+        return bool(s.openai_api_key or s.oneapikey_api_key)
 
     async def generate(
         self, prompt: str, *, aspect: str = "1:1", kind: str = "image"
     ) -> MediaResult:
-        key = get_settings().openai_api_key
+        s = get_settings()
+        # Prefer the native OpenAI key; fall back to OneAPIKey (OpenAI-compatible).
+        if s.openai_api_key:
+            key = s.openai_api_key
+            base = "https://api.openai.com"
+        else:
+            key = s.oneapikey_api_key
+            base = s.oneapikey_base_url.rstrip("/").removesuffix("/v1")
         size = _size_for_aspect(aspect)
         async with httpx.AsyncClient(timeout=120) as c:
             r = await c.post(
-                "https://api.openai.com/v1/images/generations",
+                f"{base}/v1/images/generations",
                 headers={"Authorization": f"Bearer {key}"},
                 json={"model": "gpt-image-1", "prompt": prompt[:4000], "size": size, "n": 1},
             )

@@ -46,7 +46,9 @@ class LLMClient:
         temperature: float = 0.7,
     ) -> str:
         provider = self.spec["llm_provider"]
-        if provider == "anthropic" and self.settings.anthropic_api_key:
+        has_native_key = bool(self.settings.anthropic_api_key)
+        has_oneapikey = bool(self.settings.oneapikey_api_key)
+        if provider == "anthropic" and (has_native_key or has_oneapikey):
             return await self._anthropic_complete(system, user, max_tokens, temperature)
         # Fall back to Ollama (or if provider=ollama)
         return await self._ollama_complete(system, user, max_tokens, temperature)
@@ -77,7 +79,21 @@ class LLMClient:
         self, system: str, user: str, max_tokens: int, temperature: float
     ) -> str:
         if self._anthropic is None:
-            self._anthropic = AsyncAnthropic(api_key=self.settings.anthropic_api_key)
+            # Priority:
+            #   1. explicit ANTHROPIC_API_KEY (+ optional ANTHROPIC_BASE_URL override)
+            #   2. ONEAPIKEY_API_KEY (routes through https://oneapikey.app/v1)
+            if self.settings.anthropic_api_key:
+                kwargs: dict[str, Any] = {"api_key": self.settings.anthropic_api_key}
+                if self.settings.anthropic_base_url:
+                    kwargs["base_url"] = self.settings.anthropic_base_url
+                self._anthropic = AsyncAnthropic(**kwargs)
+            elif self.settings.oneapikey_api_key:
+                self._anthropic = AsyncAnthropic(
+                    api_key=self.settings.oneapikey_api_key,
+                    base_url=self.settings.oneapikey_base_url,
+                )
+            else:
+                raise LLMError("No Anthropic or OneAPIKey credentials configured.")
         model = self.spec["llm_model"]
         msg = await self._anthropic.messages.create(
             model=model,

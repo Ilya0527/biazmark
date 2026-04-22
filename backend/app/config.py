@@ -74,6 +74,14 @@ class Settings(BaseSettings):
 
     # LLM
     anthropic_api_key: str = ""
+    # Optional: point the Anthropic client at a proxy (e.g. oneapikey.app).
+    # Leave blank to hit api.anthropic.com directly.
+    anthropic_base_url: str = ""
+    # One-key alternative: a single OneAPIKey (https://oneapikey.app) that routes
+    # to every provider (Anthropic, OpenAI, Replicate, …). If set and the matching
+    # provider key is empty, the client falls back to this.
+    oneapikey_api_key: str = ""
+    oneapikey_base_url: str = "https://oneapikey.app/v1"
     ollama_host: str = "http://localhost:11434"
     ollama_model: str = "llama3.1:8b"
 
