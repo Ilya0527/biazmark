@@ -54,6 +54,9 @@ secret:
 	@./scripts/generate-secret.sh
 
 deploy-backend:
+	./scripts/deploy-render.sh
+
+deploy-backend-fly:
 	./scripts/deploy-backend-fly.sh
 
 deploy-mobile:

@@ -1,0 +1,108 @@
+# Render Blueprint — one-click full-stack deploy.
+#
+# Usage:
+#   1. Push this repo to GitHub   (one-time: `gh auth login && gh repo create biazmark --private --push`)
+#   2. render.com → New → Blueprint → pick the repo
+#   3. Render reads this file, creates: web service + Postgres + Redis + cron
+#
+# Or via API (headless):
+#   scripts/deploy-render.sh   (reads $RENDER_API_KEY from env)
+
+services:
+  # ---------- Backend (FastAPI) ----------
+  - type: web
+    name: biazmark-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: free                # 750h/mo free, sleeps after 15min idle
+    region: frankfurt
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: biazmark-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: biazmark-redis
+          property: connectionString
+      - key: BIAZMARK_TIER
+        value: basic
+      - key: LOG_LEVEL
+        value: INFO
+      - key: OAUTH_REDIRECT_BASE
+        value: https://biazmark-backend.onrender.com
+      - key: CORS_ORIGINS
+        value: https://biazmark.vercel.app
+      - key: MEDIA_PUBLIC_BASE
+        value: https://biazmark-backend.onrender.com/media
+      - key: MEDIA_STORAGE_DIR
+        value: /data/media
+      # These must be set manually in Render dashboard (marked sync: false):
+      - key: SECRET_KEY
+        sync: false
+      - key: BIAZMARK_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: REPLICATE_API_TOKEN
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+    disk:
+      name: biazmark-data
+      mountPath: /data
+      sizeGB: 1           # free tier: 1GB free
+
+  # ---------- Worker (arq) ----------
+  - type: worker
+    name: biazmark-worker
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    dockerCommand: arq app.worker.WorkerSettings
+    plan: free
+    region: frankfurt
+    envVars:
+      - fromGroup: biazmark-shared   # see envVarGroups below
+
+  # ---------- Redis ----------
+  - type: redis
+    name: biazmark-redis
+    plan: free               # 25MB — plenty for an arq queue
+    region: frankfurt
+    ipAllowList: []          # internal access only
+
+# ---------- Postgres ----------
+databases:
+  - name: biazmark-db
+    plan: free               # 256MB RAM, 1GB storage
+    region: frankfurt
+    databaseName: biazmark
+    user: biazmark
+
+# ---------- Shared env group ----------
+# Worker + web share all the same secrets. Edit in the Render dashboard.
+envVarGroups:
+  - name: biazmark-shared
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: biazmark-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: biazmark-redis
+          property: connectionString
+      - key: BIAZMARK_TIER
+        value: basic
+      - key: SECRET_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false

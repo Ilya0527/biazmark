@@ -6,30 +6,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  backend-fly:
-    name: Backend → Fly.io
+  backend-render:
+    name: Backend → Render
     runs-on: ubuntu-latest
-    # Only runs when FLY_API_TOKEN secret is set — safely no-ops otherwise.
     if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
     steps:
       - uses: actions/checkout@v4
       - name: Gate on secret
         id: gate
         run: |
-          if [ -n "${{ secrets.FLY_API_TOKEN }}" ]; then
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::FLY_API_TOKEN not set — skipping Fly deploy."
+            echo "::notice::RENDER_DEPLOY_HOOK not set — skipping. Render's native GitHub integration may still deploy automatically."
           fi
-      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Trigger deploy hook
         if: steps.gate.outputs.enabled == 'true'
-      - name: Deploy
-        if: steps.gate.outputs.enabled == 'true'
-        working-directory: backend
-        run: flyctl deploy --remote-only
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: curl -fsSL "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
   frontend-vercel:
     name: Frontend → Vercel
