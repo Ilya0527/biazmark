@@ -63,6 +63,15 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Order matters (outermost first = runs first):
+    #   RateLimit → APIKey → routes
+    # So we add APIKey first (inner), RateLimit second (outer).
+    from app.security import APIKeyMiddleware, RateLimitMiddleware
+
+    app.add_middleware(APIKeyMiddleware)
+    app.add_middleware(RateLimitMiddleware)
+
     app.include_router(api_router)
 
     # Serve generated media assets.

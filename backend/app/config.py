@@ -97,6 +97,16 @@ class Settings(BaseSettings):
     # Auth
     secret_key: str = "change-me"
     access_token_expire_minutes: int = 10080
+    # Single shared API key that the frontend (and any machine-to-machine client)
+    # must present as `X-API-Key`. Leaving empty DISABLES auth — only do this
+    # for local dev.
+    biazmark_api_key: str = ""
+    # Comma-separated list of paths (prefixes) that skip auth. Health + OAuth
+    # callbacks must always be reachable without the key.
+    auth_skip_paths: str = "/,/healthz,/readyz,/api/health,/api/oauth/callback,/docs,/openapi.json,/media"
+
+    # Rate limiting
+    rate_limit_per_minute: int = 60
 
     # Connectors — fallback env tokens (used if no per-business ConnectorAccount exists)
     meta_access_token: str = ""

@@ -25,6 +25,12 @@ primary_region = "fra"
   source = "biazmark_data"
   destination = "/data"
 
+# Single process for MVP — worker is off until Upstash Redis is wired up.
+# Backend uses FastAPI BackgroundTasks for immediate-after-create research,
+# so the user flow works without arq. Enable worker later by:
+#   1. `fly redis create` → gets REDIS_URL
+#   2. Add [processes] + worker-specific [[vm]] (see git history)
+
 [http_service]
   internal_port = 8000
   force_https = true
