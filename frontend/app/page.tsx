@@ -9,15 +9,20 @@ import Typewriter from "@/components/Typewriter";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import IconBadge from "@/components/IconBadge";
 import CopyButton from "@/components/CopyButton";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [businesses, tier, connectors] = await Promise.all([
+  const [businesses, tier, connectors, locale] = await Promise.all([
     api.listBusinesses().catch(() => []),
     api.tier().catch(() => null),
     api.connectors().catch(() => []),
+    getLocale(),
   ]);
+
+  const tx = (k: string) => t(locale, k);
 
   return (
     <div className="space-y-16">
@@ -31,32 +36,31 @@ export default async function HomePage() {
           <Reveal dir="up">
             <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-slate-300">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Autonomous · Self-improving · Live
+              {tx("hero.badge")}
             </div>
           </Reveal>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
-            <SplitText text="Marketing that" /><br />
+            <SplitText text={tx("hero.title.1")} /><br />
             <span className="text-gradient">
-              <SplitText text="runs itself." delay={400} />
+              <SplitText text={tx("hero.title.2")} delay={400} />
             </span>
           </h1>
           <Reveal dir="up" delay={200}>
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-              Brief in, campaigns out. Five AI agents handle research, strategy, content,
-              publishing, analytics, and optimization — end to end.
+              {tx("hero.subtitle")}
             </p>
           </Reveal>
           <Reveal dir="up" delay={400}>
             <div className="text-slate-500 text-sm font-mono min-h-[1.5em]">
-              Now generating:{" "}
+              {tx("hero.now")}{" "}
               <span className="text-slate-200">
                 <Typewriter
                   lines={[
-                    "Meta ads for a coffee DTC brand",
-                    "LinkedIn posts for a B2B SaaS",
-                    "Articles for a wellness app",
-                    "TikTok scripts for a fashion label",
-                    "Email drip for a bookshop",
+                    tx("type.1"),
+                    tx("type.2"),
+                    tx("type.3"),
+                    tx("type.4"),
+                    tx("type.5"),
                   ]}
                 />
               </span>
@@ -65,19 +69,19 @@ export default async function HomePage() {
           <Reveal dir="up" delay={600}>
             <div className="flex flex-wrap gap-3 justify-center pt-4">
               <MagneticButton href="/onboarding" className="btn-primary text-base px-6 py-3">
-                Onboard a business →
+                {tx("hero.cta.onboard")}
               </MagneticButton>
               <Link href="/install" className="btn-secondary text-base px-6 py-3">
-                Install in 2 minutes
+                {tx("hero.cta.install")}
               </Link>
               <Link href="/docs" className="btn-ghost text-base px-6 py-3">
-                API docs
+                {tx("hero.cta.docs")}
               </Link>
             </div>
           </Reveal>
           <Reveal dir="up" delay={800}>
             <div className="mt-8 max-w-xl mx-auto">
-              <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 justify-between group">
+              <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 justify-between group" dir="ltr">
                 <code className="text-xs md:text-sm font-mono text-slate-300 truncate">
                   iwr -useb https://biazmark.vercel.app/install.ps1 | iex
                 </code>
@@ -88,7 +92,10 @@ export default async function HomePage() {
                 />
               </div>
               <div className="text-[11px] text-slate-500 mt-2 text-center">
-                Windows installer · <Link href="/install" className="hover:text-slate-300 underline underline-offset-2">see Mac, Linux, Docker →</Link>
+                {tx("hero.installer.note")} ·{" "}
+                <Link href="/install" className="hover:text-slate-300 underline underline-offset-2">
+                  {tx("hero.installer.more")}
+                </Link>
               </div>
             </div>
           </Reveal>
@@ -103,17 +110,21 @@ export default async function HomePage() {
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Current tier</div>
+                  <div className="text-xs uppercase tracking-wider text-slate-500">{tx("stats.tier")}</div>
                   <IconBadge kind="bolt" color="indigo" size={36} />
                 </div>
                 <div className="text-3xl font-bold capitalize mt-3">{tier?.tier ?? "—"}</div>
                 <div className="text-sm text-slate-400 mt-1">
-                  {tier?.llm_model} · {tier?.research_depth} research
+                  {tier?.llm_model} · {tier?.research_depth} {tx("stats.tier.research")}
                 </div>
                 <div className="text-sm text-slate-400">
                   {tier?.autonomous_agents
-                    ? "Autonomous agents on"
-                    : `Loop: ${tier?.loop_interval_seconds ? `${Math.round(tier.loop_interval_seconds / 60)} min` : "manual"}`}
+                    ? tx("stats.tier.auto")
+                    : `${tx("stats.tier.loop")}: ${
+                        tier?.loop_interval_seconds
+                          ? `${Math.round(tier.loop_interval_seconds / 60)} ${tx("stats.tier.min")}`
+                          : tx("stats.tier.manual")
+                      }`}
                 </div>
               </div>
             </div>
@@ -125,14 +136,14 @@ export default async function HomePage() {
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-pink-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Businesses</div>
+                  <div className="text-xs uppercase tracking-wider text-slate-500">{tx("stats.businesses")}</div>
                   <IconBadge kind="chart" color="rose" size={36} />
                 </div>
                 <div className="text-3xl font-bold mt-3">
                   <AnimatedCounter value={businesses.length} />
                 </div>
                 <div className="text-sm text-slate-400 mt-1">
-                  {businesses.length > 0 ? "Managed in this instance" : "None yet — onboard one"}
+                  {businesses.length > 0 ? tx("stats.businesses.managed") : tx("stats.businesses.none")}
                 </div>
               </div>
             </div>
@@ -144,7 +155,7 @@ export default async function HomePage() {
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">Connectors</div>
+                  <div className="text-xs uppercase tracking-wider text-slate-500">{tx("stats.connectors")}</div>
                   <IconBadge kind="globe" color="cyan" size={36} />
                 </div>
                 <div className="text-3xl font-bold mt-3">
@@ -162,21 +173,21 @@ export default async function HomePage() {
       {/* Capabilities row */}
       <section>
         <Reveal dir="up">
-          <h2 className="text-2xl font-semibold mb-6">Five agents. One loop.</h2>
+          <h2 className="text-2xl font-semibold mb-6">{tx("agents.title")}</h2>
         </Reveal>
         <div className="grid md:grid-cols-5 gap-3">
           {[
-            { kind: "chart", color: "indigo", name: "Researcher", desc: "Market + competitors" },
-            { kind: "bolt", color: "rose", name: "Strategist", desc: "Positioning + channels" },
-            { kind: "star", color: "amber", name: "Creator", desc: "Posts · ads · articles · emails" },
-            { kind: "globe", color: "cyan", name: "Analyst", desc: "Reads metrics, finds signal" },
-            { kind: "shield", color: "emerald", name: "Optimizer", desc: "Kills losers, scales winners" },
+            { kind: "chart", color: "indigo", nameKey: "agents.researcher", descKey: "agents.researcher.desc" },
+            { kind: "bolt", color: "rose", nameKey: "agents.strategist", descKey: "agents.strategist.desc" },
+            { kind: "star", color: "amber", nameKey: "agents.creator", descKey: "agents.creator.desc" },
+            { kind: "globe", color: "cyan", nameKey: "agents.analyst", descKey: "agents.analyst.desc" },
+            { kind: "shield", color: "emerald", nameKey: "agents.optimizer", descKey: "agents.optimizer.desc" },
           ].map((a, i) => (
-            <Reveal key={a.name} dir="up" delay={i * 80}>
+            <Reveal key={a.nameKey} dir="up" delay={i * 80}>
               <div className="card hover:border-accent-500/40 transition-colors">
                 <IconBadge kind={a.kind as any} color={a.color as any} size={44} />
-                <div className="mt-3 font-semibold">{a.name}</div>
-                <div className="text-xs text-slate-400 mt-1">{a.desc}</div>
+                <div className="mt-3 font-semibold">{tx(a.nameKey)}</div>
+                <div className="text-xs text-slate-400 mt-1">{tx(a.descKey)}</div>
               </div>
             </Reveal>
           ))}
@@ -187,10 +198,10 @@ export default async function HomePage() {
       <section>
         <div className="flex items-center justify-between mb-6">
           <Reveal dir="left">
-            <h2 className="text-2xl font-semibold">Your businesses</h2>
+            <h2 className="text-2xl font-semibold">{tx("biz.title")}</h2>
           </Reveal>
           <Reveal dir="right">
-            <Link href="/onboarding" className="btn-secondary">+ New</Link>
+            <Link href="/onboarding" className="btn-secondary">{tx("biz.new")}</Link>
           </Reveal>
         </div>
         {businesses.length === 0 ? (
@@ -199,10 +210,12 @@ export default async function HomePage() {
               <FloatingOrbs count={4} seed={3} colors={["#6366f1", "#ec4899"]} />
               <div className="relative text-slate-400">
                 <div className="text-5xl mb-3 opacity-40">✨</div>
-                <div>No businesses yet. Start by{" "}
+                <div>
+                  {tx("biz.empty")}{" "}
                   <Link href="/onboarding" className="text-accent-400 hover:underline">
-                    onboarding one
-                  </Link>.
+                    {tx("biz.empty.cta")}
+                  </Link>
+                  .
                 </div>
               </div>
             </div>

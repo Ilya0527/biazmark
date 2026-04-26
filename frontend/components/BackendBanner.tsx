@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { t, type Locale, DEFAULT_LOCALE } from "@/lib/i18n";
 
 /**
  * Shows a dismissible banner when the backend API is unreachable.
@@ -13,7 +14,7 @@ import Link from "next/link";
  * When a backend IS reachable (or the user has dismissed the banner) we render
  * nothing — no layout shift, no chrome.
  */
-export default function BackendBanner() {
+export default function BackendBanner({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   const [state, setState] = useState<"checking" | "ok" | "down" | "dismissed">("checking");
 
   useEffect(() => {
@@ -48,15 +49,15 @@ export default function BackendBanner() {
         <div className="flex items-center gap-2 text-amber-200 min-w-0">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
           <span className="truncate">
-            <span className="font-semibold">Demo mode.</span>{" "}
+            <span className="font-semibold">{t(locale, "banner.title")}</span>{" "}
             <span className="text-amber-100/80">
-              The backend isn't wired up here. Install in 2 minutes to get the full autonomous loop.
+              {t(locale, "banner.body")}
             </span>
           </span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Link href="/install" className="btn-ghost !py-1 !px-2 text-amber-200 hover:text-white">
-            Install →
+            {t(locale, "banner.cta")}
           </Link>
           <button
             type="button"
