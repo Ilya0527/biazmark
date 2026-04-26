@@ -53,7 +53,7 @@ if (Test-Path $installDir) {
     git pull --quiet --ff-only
     Pop-Location
 } else {
-    git clone --depth 1 https://github.com/biazmark/biazmark.git $installDir
+    git clone --depth 1 https://github.com/idanhasakiot-dotcom/biazmark.git $installDir
     Write-Ok "Cloned"
 }
 

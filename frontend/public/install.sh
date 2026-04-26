@@ -42,7 +42,7 @@ if [ -d "$install_dir/.git" ]; then
   ok "Directory exists — pulling latest"
   (cd "$install_dir" && git pull --quiet --ff-only)
 else
-  git clone --depth 1 https://github.com/biazmark/biazmark.git "$install_dir"
+  git clone --depth 1 https://github.com/idanhasakiot-dotcom/biazmark.git "$install_dir"
   ok "Cloned"
 fi
 
