@@ -8,8 +8,9 @@ import { t, RTL } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
-  title: "Biazmark — Autonomous Marketing",
-  description: "Brief in, campaigns out. Self-improving marketing for any business.",
+  title: "AutoCMO — Autonomous Marketing CMO",
+  description:
+    "Brief in, campaigns out. An AI Chief Marketing Officer that researches, writes, publishes, and optimizes — 24/7.",
 };
 
 export const viewport: Viewport = {
@@ -43,7 +44,7 @@ export default async function RootLayout({
                 >
                   <span className="absolute inset-0 rounded-xl bg-white/10 blur-md" />
                 </span>
-                <span>Biazmark</span>
+                <span>AutoCMO</span>
               </Link>
               <nav className="flex items-center gap-1 text-sm">
                 <Link href="/" className="btn-ghost">{t(locale, "nav.businesses")}</Link>
@@ -60,7 +61,7 @@ export default async function RootLayout({
             {children}
           </main>
           <footer className="relative z-10 border-t border-ink-700/50 py-6 mt-12 text-center text-xs text-slate-500">
-            Biazmark · {t(locale, "footer.tagline")} ·{" "}
+            AutoCMO · {t(locale, "footer.tagline")} ·{" "}
             <a href="/docs" className="hover:text-slate-300">API</a>
           </footer>
         </div>

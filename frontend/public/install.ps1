@@ -1,8 +1,8 @@
 # ============================================================================
-# Biazmark one-liner installer (Windows PowerShell)
+# AutoCMO one-liner installer (Windows PowerShell)
 #
 # Usage (paste into PowerShell):
-#   iwr -useb https://biazmark.vercel.app/install.ps1 | iex
+#   iwr -useb https://autocmo.app/install.ps1 | iex
 #
 # What it does:
 #   1. Checks that git + docker are installed (installs them via winget if not)
@@ -35,7 +35,7 @@ function Install-Dep($id, $cmd) {
 }
 
 Write-Host ""
-Write-Host "  Biazmark  " -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
+Write-Host "  AutoCMO  " -BackgroundColor DarkMagenta -ForegroundColor White -NoNewline
 Write-Host " — autonomous marketing installer" -ForegroundColor White
 Write-Host ""
 

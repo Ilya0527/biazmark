@@ -83,10 +83,10 @@ export default async function HomePage() {
             <div className="mt-8 max-w-xl mx-auto">
               <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 justify-between group" dir="ltr">
                 <code className="text-xs md:text-sm font-mono text-slate-300 truncate">
-                  iwr -useb https://biazmark.vercel.app/install.ps1 | iex
+                  iwr -useb https://autocmo.app/install.ps1 | iex
                 </code>
                 <CopyButton
-                  text="iwr -useb https://biazmark.vercel.app/install.ps1 | iex"
+                  text="iwr -useb https://autocmo.app/install.ps1 | iex"
                   label=""
                   variant="minimal"
                 />

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ============================================================================
-# Biazmark one-liner installer (macOS / Linux)
+# AutoCMO one-liner installer (macOS / Linux)
 #
 # Usage:
-#   curl -fsSL https://biazmark.vercel.app/install.sh | bash
+#   curl -fsSL https://autocmo.app/install.sh | bash
 # ============================================================================
 
 set -euo pipefail
@@ -17,7 +17,7 @@ err()  { printf "  ${c_red}x${c_off} %s\n" "$1"; }
 
 has()  { command -v "$1" >/dev/null 2>&1; }
 
-printf "\n${c_cyan}  Biazmark ${c_off}— autonomous marketing installer\n\n"
+printf "\n${c_cyan}  AutoCMO ${c_off}— autonomous marketing installer\n\n"
 
 # --- deps ---
 step "Checking dependencies"

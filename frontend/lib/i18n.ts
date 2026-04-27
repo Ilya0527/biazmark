@@ -205,7 +205,7 @@ const en: Dict = {
   // ===== content =====
   "content.title": "All content",
   "content.subtitle":
-    "Every variant Biazmark has generated for this business, across channels and campaigns.",
+    "Every variant AutoCMO has generated for this business, across channels and campaigns.",
   "content.kind.all": "All",
   "content.kind.post": "Posts",
   "content.kind.ad": "Ads",
@@ -216,13 +216,13 @@ const en: Dict = {
 
   // ===== media =====
   "media.title": "Media gallery",
-  "media.subtitle": "Every image + video Biazmark has generated for this business.",
+  "media.subtitle": "Every image + video AutoCMO has generated for this business.",
   "media.empty": "No media yet. Media is generated alongside each content variant.",
 
   // ===== connections =====
   "conn.title": "Connections",
   "conn.subtitle":
-    "Connect each platform once — Biazmark will post, run ads, and pull metrics on its own.",
+    "Connect each platform once — AutoCMO will post, run ads, and pull metrics on its own.",
   "conn.platforms": "Platforms",
   "conn.status.connected": "connected",
   "conn.status.notconn": "not connected",
@@ -435,7 +435,7 @@ const he: Dict = {
 
   // ===== content =====
   "content.title": "כל התוכן",
-  "content.subtitle": "כל וריאציה ש-Biazmark ייצר עבור העסק הזה, על פני כל הערוצים והקמפיינים.",
+  "content.subtitle": "כל וריאציה ש-AutoCMO ייצר עבור העסק הזה, על פני כל הערוצים והקמפיינים.",
   "content.kind.all": "הכל",
   "content.kind.post": "פוסטים",
   "content.kind.ad": "מודעות",
@@ -446,13 +446,13 @@ const he: Dict = {
 
   // ===== media =====
   "media.title": "גלריית מדיה",
-  "media.subtitle": "כל תמונה ווידאו ש-Biazmark ייצר עבור העסק הזה.",
+  "media.subtitle": "כל תמונה ווידאו ש-AutoCMO ייצר עבור העסק הזה.",
   "media.empty": "אין מדיה עדיין. מדיה נוצרת לצד כל וריאציית תוכן.",
 
   // ===== connections =====
   "conn.title": "חיבורים",
   "conn.subtitle":
-    "חבר כל פלטפורמה פעם אחת — Biazmark יפרסם, יריץ מודעות וימשוך מטריקות בעצמו.",
+    "חבר כל פלטפורמה פעם אחת — AutoCMO יפרסם, יריץ מודעות וימשוך מטריקות בעצמו.",
   "conn.platforms": "פלטפורמות",
   "conn.status.connected": "מחובר",
   "conn.status.notconn": "לא מחובר",
@@ -668,7 +668,7 @@ const ru: Dict = {
   // ===== content =====
   "content.title": "Весь контент",
   "content.subtitle":
-    "Каждый вариант, который Biazmark создал для этого бизнеса — по всем каналам и кампаниям.",
+    "Каждый вариант, который AutoCMO создал для этого бизнеса — по всем каналам и кампаниям.",
   "content.kind.all": "Все",
   "content.kind.post": "Посты",
   "content.kind.ad": "Реклама",
@@ -680,13 +680,13 @@ const ru: Dict = {
 
   // ===== media =====
   "media.title": "Галерея медиа",
-  "media.subtitle": "Все изображения и видео, созданные Biazmark для этого бизнеса.",
+  "media.subtitle": "Все изображения и видео, созданные AutoCMO для этого бизнеса.",
   "media.empty": "Медиа ещё нет. Они создаются вместе с каждым вариантом контента.",
 
   // ===== connections =====
   "conn.title": "Подключения",
   "conn.subtitle":
-    "Подключите каждую платформу один раз — Biazmark будет публиковать, запускать рекламу и собирать метрики сам.",
+    "Подключите каждую платформу один раз — AutoCMO будет публиковать, запускать рекламу и собирать метрики сам.",
   "conn.platforms": "Платформы",
   "conn.status.connected": "подключено",
   "conn.status.notconn": "не подключено",

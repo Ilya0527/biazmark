@@ -13,10 +13,10 @@ const PLATFORMS: Platform[] = ["windows", "mac", "linux", "android", "docker", "
 
 // Static commands (not translated — they are code)
 const CMDS: Record<Platform, string> = {
-  windows: `iwr -useb https://biazmark.vercel.app/install.ps1 | iex`,
-  mac: `curl -fsSL https://biazmark.vercel.app/install.sh | bash`,
-  linux: `curl -fsSL https://biazmark.vercel.app/install.sh | bash`,
-  android: `https://biazmark.vercel.app/Biazmark.apk`,
+  windows: `iwr -useb https://autocmo.app/install.ps1 | iex`,
+  mac: `curl -fsSL https://autocmo.app/install.sh | bash`,
+  linux: `curl -fsSL https://autocmo.app/install.sh | bash`,
+  android: `https://autocmo.app/AutoCMO.apk`,
   docker: `git clone https://github.com/Ilya0527/biazmark.git
 cd biazmark
 cp .env.example .env
@@ -124,10 +124,10 @@ export default function InstallClient({ locale }: { locale: Locale }) {
               )}
               {active === "android" && (
                 <>
-                  <a href="/Biazmark.apk" download="Biazmark.apk" className="btn-primary">
+                  <a href="/AutoCMO.apk" download="AutoCMO.apk" className="btn-primary">
                     <DownloadIcon /> {tx("install.dl.apk")}
                   </a>
-                  <a href="/Biazmark.apk" className="btn-secondary" target="_blank" rel="noreferrer">
+                  <a href="/AutoCMO.apk" className="btn-secondary" target="_blank" rel="noreferrer">
                     {tx("install.dl.direct")}
                   </a>
                 </>
