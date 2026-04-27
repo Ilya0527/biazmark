@@ -1,30 +1,41 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 /**
- * Biazmark mobile app — two modes:
+ * AutoCMO mobile app — two modes:
  *
- *   1. Remote (default):  loads the live Vercel deploy.
- *      Set BIAZMARK_URL to override (e.g. https://yourdomain.com).
+ *   1. Remote (default):  loads the live deployment at autocmo.app.
+ *      Set AUTOCMO_URL to override (e.g. for staging).
  *
- *   2. Bundled:  if BIAZMARK_STATIC=1, Capacitor serves a static export that the
+ *   2. Bundled:  if AUTOCMO_STATIC=1, Capacitor serves a static export that the
  *      /frontend/scripts/build-mobile.sh script produces in /mobile/www.
+ *
+ * The legacy BIAZMARK_URL / BIAZMARK_STATIC env vars are still honoured for
+ * compatibility with old build scripts.
  */
 
-const REMOTE_URL = process.env.BIAZMARK_URL || "https://biazmark.vercel.app";
+const REMOTE_URL =
+  process.env.AUTOCMO_URL ||
+  process.env.BIAZMARK_URL ||
+  "https://autocmo.app";
+
+const STATIC =
+  process.env.AUTOCMO_STATIC === "1" || process.env.BIAZMARK_STATIC === "1";
 
 const config: CapacitorConfig = {
-  appId: "com.biazmark.app",
-  appName: "Biazmark",
+  appId: "com.autocmo.app",
+  appName: "AutoCMO",
   webDir: "www",
   backgroundColor: "#0b0d12",
-  server: process.env.BIAZMARK_STATIC === "1"
+  server: STATIC
     ? undefined
     : {
         url: REMOTE_URL,
         cleartext: false,
         allowNavigation: [
+          "autocmo.app",
+          "*.autocmo.app",
           "*.vercel.app",
-          "*.biazmark.com",
+          "*.onrender.com",
           "*.anthropic.com",
           "graph.facebook.com",
           "api.linkedin.com",
@@ -48,7 +59,7 @@ const config: CapacitorConfig = {
       overlaysWebView: false,
     },
     Preferences: {
-      group: "BiazmarkPrefs",
+      group: "AutoCMOPrefs",
     },
   },
   android: {

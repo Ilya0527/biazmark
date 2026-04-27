@@ -1,8 +1,8 @@
 {
-  "name": "biazmark-mobile",
+  "name": "autocmo-mobile",
   "version": "0.1.0",
   "private": true,
-  "description": "Biazmark companion app — Capacitor shell around the web dashboard",
+  "description": "AutoCMO companion app — Capacitor shell around the web dashboard",
   "scripts": {
     "sync": "cap sync",
     "open:android": "cap open android",

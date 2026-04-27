@@ -1,10 +1,16 @@
-# Biazmark — Autonomous Marketing System
+# AutoCMO — Your AI Chief Marketing Officer
 
-מערכת פרסום אוטונומית, מקצה לקצה. מתחברת לרשתות החברתיות, מייצרת תוכן (פוסטים, מודעות, כתבות, אימיילים), מייצרת תמונות/וידאו, מפרסמת, מנתחת, ומשפרת את עצמה — כל הזמן.
+> **[autocmo.app](https://autocmo.app)** · The CMO for businesses that can't afford one.
 
-An autonomous, end-to-end marketing system. Connects to every major platform, generates
-content (posts, ads, articles, emails), generates images/video, publishes, analyses,
-and improves itself continuously.
+מערכת שיווק אוטונומית, end-to-end. נותנים לה תיאור עסק, היא מבצעת מחקר שוק, בונה אסטרטגיה,
+מייצרת תוכן (פוסטים, מודעות, כתבות, אימיילים), מייצרת תמונות/וידאו, מפרסמת,
+מנתחת מטריקות ומשפרת את עצמה כל הזמן.
+
+An autonomous AI Chief Marketing Officer. Brief in, campaigns out. Researches the market,
+builds a strategy, generates content (posts, ads, articles, emails), produces images and
+video, publishes to every major platform, reads metrics, and self-improves — 24/7.
+
+**Live in three languages:** English · עברית · Русский.
 
 ---
 
@@ -21,7 +27,7 @@ and improves itself continuously.
 
 ## What gets produced
 
-For every business + strategy, Biazmark auto-generates and (optionally) auto-publishes:
+For every business + strategy, AutoCMO auto-generates and (optionally) auto-publishes:
 
 - **Social posts** — Facebook, Instagram, LinkedIn, X (including threads), TikTok captions
 - **Paid ads** — Meta Ads (campaigns + creatives + ad-sets), Google Responsive Search Ads (drafts)
