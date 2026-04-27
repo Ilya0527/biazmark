@@ -7,15 +7,84 @@ import LangSwitcher from "@/components/LangSwitcher";
 import { t, RTL } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 
+const SITE_URL = "https://autocmo.app";
+const SITE_NAME = "AutoCMO";
+const TITLE = "AutoCMO — Your AI Chief Marketing Officer";
+const DESCRIPTION =
+  "Brief in, campaigns out. An autonomous AI CMO that researches the market, builds strategy, writes content, publishes to every platform, and self-improves — 24/7.";
+
 export const metadata: Metadata = {
-  title: "AutoCMO — Autonomous Marketing CMO",
-  description:
-    "Brief in, campaigns out. An AI Chief Marketing Officer that researches, writes, publishes, and optimizes — 24/7.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: TITLE, template: "%s · AutoCMO" },
+  description: DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "AI CMO",
+    "autonomous marketing",
+    "marketing automation",
+    "AI marketing",
+    "Chief Marketing Officer",
+    "AI agency",
+    "content generation",
+    "ad automation",
+  ],
+  authors: [{ name: "AutoCMO" }],
+  manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      en: `${SITE_URL}/`,
+      he: `${SITE_URL}/`,
+      ru: `${SITE_URL}/`,
+    },
+  },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    type: "website",
+    locale: "en_US",
+    alternateLocale: ["he_IL", "ru_RU"],
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "AutoCMO — Marketing that runs itself",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: "#0b0d12",
   colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default async function RootLayout({
@@ -61,8 +130,23 @@ export default async function RootLayout({
             {children}
           </main>
           <footer className="relative z-10 border-t border-ink-700/50 py-6 mt-12 text-center text-xs text-slate-500">
-            AutoCMO · {t(locale, "footer.tagline")} ·{" "}
-            <a href="/docs" className="hover:text-slate-300">API</a>
+            <div>
+              AutoCMO · {t(locale, "footer.tagline")} ·{" "}
+              <Link href="/docs" className="hover:text-slate-300">API</Link>
+              {" · "}
+              <Link href="/privacy" className="hover:text-slate-300">Privacy</Link>
+              {" · "}
+              <Link href="/terms" className="hover:text-slate-300">Terms</Link>
+              {" · "}
+              <a
+                href="https://github.com/Ilya0527/biazmark"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-slate-300"
+              >
+                GitHub
+              </a>
+            </div>
           </footer>
         </div>
       </body>

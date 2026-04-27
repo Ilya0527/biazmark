@@ -1,7 +1,9 @@
 """FastAPI application entry point."""
 from __future__ import annotations
 
+import os
 import pathlib
+import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -21,11 +23,14 @@ from app.logging_config import get_logger, setup_logging
 setup_logging()
 log = get_logger(__name__)
 
+# Capture startup time for uptime reporting.
+_BOOT_TIME = time.time()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings = get_settings()
-    log.info("biazmark_starting", version=__version__, tier=settings.biazmark_tier.value)
+    log.info("autocmo_starting", version=__version__, tier=settings.biazmark_tier.value)
 
     # Production safety checks — loud warnings, never crash.
     is_prod = settings.oauth_redirect_base.startswith("https://")
@@ -43,17 +48,21 @@ async def lifespan(app: FastAPI):
             )
 
     await init_db()
-    log.info("biazmark_ready")
+    log.info("autocmo_ready")
     yield
-    log.info("biazmark_shutting_down")
+    log.info("autocmo_shutting_down")
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
     app = FastAPI(
-        title="Biazmark",
+        title="AutoCMO",
         version=__version__,
-        description="Autonomous marketing system — brief in, campaigns out, self-improving.",
+        description=(
+            "AutoCMO — your AI Chief Marketing Officer. Brief in, campaigns out. "
+            "Five autonomous agents handle research, strategy, content, publishing, "
+            "analytics, and optimization end-to-end."
+        ),
         lifespan=lifespan,
     )
     app.add_middleware(
@@ -81,12 +90,29 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     async def root():
-        return {"name": "biazmark", "version": __version__, "docs": "/docs"}
+        return {
+            "name": "autocmo",
+            "version": __version__,
+            "tier": settings.biazmark_tier.value,
+            "docs": "/docs",
+            "site": "https://autocmo.app",
+        }
 
     # PaaS-standard health endpoints (Fly, Railway, Render, K8s all probe these).
     @app.get("/healthz")
     async def healthz():
-        return {"status": "ok"}
+        return {
+            "status": "ok",
+            "version": __version__,
+            "uptime_seconds": int(time.time() - _BOOT_TIME),
+            # Render injects RENDER_GIT_COMMIT; Vercel/Fly use other names.
+            "commit": (
+                os.getenv("RENDER_GIT_COMMIT")
+                or os.getenv("VERCEL_GIT_COMMIT_SHA")
+                or os.getenv("GIT_COMMIT")
+                or "unknown"
+            )[:7],
+        }
 
     @app.get("/readyz")
     async def readyz():
@@ -98,9 +124,14 @@ def create_app() -> FastAPI:
         try:
             async with get_engine().connect() as conn:
                 await conn.execute(text("SELECT 1"))
-            return {"status": "ok", "db": "ok"}
+            return {
+                "status": "ok",
+                "db": "ok",
+                "version": __version__,
+                "uptime_seconds": int(time.time() - _BOOT_TIME),
+            }
         except Exception as e:
-            return {"status": "degraded", "db": str(e)}
+            return {"status": "degraded", "db": str(e), "version": __version__}
 
     return app
 

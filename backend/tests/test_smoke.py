@@ -8,7 +8,7 @@ from __future__ import annotations
 def test_app_imports():
     from app.main import app
 
-    assert app.title == "Biazmark"
+    assert app.title == "AutoCMO"
 
 
 def test_connector_registry_populated():
