@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { api } from "@/lib/api";
 import { OptimizeButton } from "./optimize-button";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
 
@@ -11,13 +13,17 @@ export default async function CampaignPage({
   params: Promise<{ campaignId: string }>;
 }) {
   const { campaignId } = await params;
-  const campaign = await api.getCampaign(campaignId).catch(() => null);
+  const [campaign, locale] = await Promise.all([
+    api.getCampaign(campaignId).catch(() => null),
+    getLocale(),
+  ]);
   if (!campaign) notFound();
 
   const [variants, metrics] = await Promise.all([
     api.listVariants(campaignId).catch(() => []),
     api.listMetrics(campaignId).catch(() => []),
   ]);
+  const tx = (k: string) => t(locale, k);
 
   const metricsByVariant = new Map<string, typeof metrics>();
   for (const m of metrics) {
@@ -45,7 +51,7 @@ export default async function CampaignPage({
             href={`/dashboard/${campaign.business_id}`}
             className="text-sm text-slate-400 hover:text-slate-200"
           >
-            ← Dashboard
+            {tx("camp.back")}
           </Link>
           <h1 className="text-3xl font-bold mt-1">{campaign.name}</h1>
           <div className="flex items-center gap-3 mt-2 text-sm text-slate-400">
@@ -56,19 +62,19 @@ export default async function CampaignPage({
             <span>· {campaign.objective}</span>
           </div>
         </div>
-        <OptimizeButton campaignId={campaignId} />
+        <OptimizeButton campaignId={campaignId} locale={locale} />
       </div>
 
       <section className="grid md:grid-cols-5 gap-4">
-        <Stat label="Impressions" value={totals.impressions.toLocaleString()} />
-        <Stat label="Clicks" value={totals.clicks.toLocaleString()} />
-        <Stat label="Conversions" value={totals.conversions.toLocaleString()} />
-        <Stat label="Spend" value={`$${totals.spend.toFixed(2)}`} />
-        <Stat label="Revenue" value={`$${totals.revenue.toFixed(2)}`} />
+        <Stat label={tx("camp.stat.imp")} value={totals.impressions.toLocaleString(locale)} />
+        <Stat label={tx("camp.stat.clicks")} value={totals.clicks.toLocaleString(locale)} />
+        <Stat label={tx("camp.stat.conv")} value={totals.conversions.toLocaleString(locale)} />
+        <Stat label={tx("camp.stat.spend")} value={`$${totals.spend.toFixed(2)}`} />
+        <Stat label={tx("camp.stat.rev")} value={`$${totals.revenue.toFixed(2)}`} />
       </section>
 
       <section>
-        <h2 className="font-semibold mb-3">Content variants ({variants.length})</h2>
+        <h2 className="font-semibold mb-3">{tx("camp.variants.title")} ({variants.length})</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {variants.map((v) => {
             const vm = (metricsByVariant.get(v.id) || [])[0];
@@ -82,22 +88,22 @@ export default async function CampaignPage({
                 <p className="text-sm text-slate-300 whitespace-pre-wrap">{v.body}</p>
                 {v.cta && (
                   <div className="mt-3 text-xs">
-                    <span className="label !mb-0 mr-2">CTA</span>
+                    <span className="label !mb-0 me-2">{tx("camp.var.cta")}</span>
                     <span className="text-accent-400">{v.cta}</span>
                   </div>
                 )}
                 {v.visual_prompt && (
                   <div className="mt-3 text-xs text-slate-500">
-                    <span className="label !mb-0 mr-2">Visual</span>
+                    <span className="label !mb-0 me-2">{tx("camp.var.visual")}</span>
                     {v.visual_prompt}
                   </div>
                 )}
                 {vm && (
                   <div className="mt-4 pt-3 border-t border-ink-700 grid grid-cols-4 gap-2 text-xs">
-                    <MiniStat label="Imp" v={vm.impressions} />
-                    <MiniStat label="Clk" v={vm.clicks} />
-                    <MiniStat label="Conv" v={vm.conversions} />
-                    <MiniStat label="ROAS" v={vm.spend ? (vm.revenue / vm.spend).toFixed(1) : "—"} />
+                    <MiniStat label={tx("camp.mini.imp")} v={vm.impressions} />
+                    <MiniStat label={tx("camp.mini.clk")} v={vm.clicks} />
+                    <MiniStat label={tx("camp.mini.conv")} v={vm.conversions} />
+                    <MiniStat label={tx("camp.mini.roas")} v={vm.spend ? (vm.revenue / vm.spend).toFixed(1) : "—"} />
                   </div>
                 )}
               </div>

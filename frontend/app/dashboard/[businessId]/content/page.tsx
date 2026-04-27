@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { api, type ContentVariant } from "@/lib/api";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
 
-const KINDS = [
-  { value: "", label: "All" },
-  { value: "post", label: "Posts" },
-  { value: "ad", label: "Ads" },
-  { value: "article", label: "Articles" },
-  { value: "email", label: "Emails" },
+const KIND_KEYS = [
+  { value: "", key: "content.kind.all" },
+  { value: "post", key: "content.kind.post" },
+  { value: "ad", key: "content.kind.ad" },
+  { value: "article", key: "content.kind.article" },
+  { value: "email", key: "content.kind.email" },
 ];
 
 export default async function ContentPage({
@@ -21,49 +23,42 @@ export default async function ContentPage({
 }) {
   const { businessId } = await params;
   const { kind } = await searchParams;
-  const biz = await api.getBusiness(businessId).catch(() => null);
+  const [biz, locale] = await Promise.all([
+    api.getBusiness(businessId).catch(() => null),
+    getLocale(),
+  ]);
   if (!biz) notFound();
   const content = await api.listBusinessContent(businessId, kind).catch(() => []);
+  const tx = (k: string) => t(locale, k);
 
   return (
     <div className="space-y-6">
       <div>
-        <Link
-          href={`/dashboard/${businessId}`}
-          className="text-sm text-slate-400 hover:text-slate-200"
-        >
+        <Link href={`/dashboard/${businessId}`} className="text-sm text-slate-400 hover:text-slate-200">
           ← {biz.name}
         </Link>
-        <h1 className="text-3xl font-bold mt-1">All content</h1>
-        <p className="text-slate-400 mt-1">
-          Every variant Biazmark has generated for this business, across channels and campaigns.
-        </p>
+        <h1 className="text-3xl font-bold mt-1">{tx("content.title")}</h1>
+        <p className="text-slate-400 mt-1">{tx("content.subtitle")}</p>
       </div>
 
       <div className="flex items-center gap-1">
-        {KINDS.map((k) => (
+        {KIND_KEYS.map((k) => (
           <Link
             key={k.value}
             href={`/dashboard/${businessId}/content${k.value ? `?kind=${k.value}` : ""}`}
-            className={`btn ${
-              (kind ?? "") === k.value
-                ? "btn-primary"
-                : "btn-ghost"
-            }`}
+            className={`btn ${(kind ?? "") === k.value ? "btn-primary" : "btn-ghost"}`}
           >
-            {k.label}
+            {tx(k.key)}
           </Link>
         ))}
       </div>
 
       {content.length === 0 ? (
-        <div className="card text-center text-slate-400 py-12">
-          No content yet. Generate a strategy and publish it to produce variants.
-        </div>
+        <div className="card text-center text-slate-400 py-12">{tx("content.empty")}</div>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {content.map((v) => (
-            <ContentCard key={v.id} v={v} />
+            <ContentCard key={v.id} v={v} ctaLabel={tx("content.cta")} />
           ))}
         </div>
       )}
@@ -71,21 +66,14 @@ export default async function ContentPage({
   );
 }
 
-function ContentCard({ v }: { v: ContentVariant }) {
+function ContentCard({ v, ctaLabel }: { v: ContentVariant; ctaLabel: string }) {
   const isArticle = v.kind === "article";
   const isEmail = v.kind === "email";
   return (
-    <Link
-      href={`/campaigns/${v.campaign_id}`}
-      className="card card-hover block overflow-hidden"
-    >
+    <Link href={`/campaigns/${v.campaign_id}`} className="card card-hover block overflow-hidden">
       {v.media_url && (
         <div className="-m-6 mb-4 bg-ink-900">
-          <img
-            src={v.media_url}
-            alt={v.headline}
-            className="w-full max-h-64 object-cover"
-          />
+          <img src={v.media_url} alt={v.headline} className="w-full max-h-64 object-cover" />
         </div>
       )}
       <div className="flex items-center gap-2 mb-2">
@@ -108,7 +96,7 @@ function ContentCard({ v }: { v: ContentVariant }) {
       </div>
       {v.cta && (
         <div className="mt-3 text-xs">
-          <span className="text-slate-500">CTA · </span>
+          <span className="text-slate-500">{ctaLabel} · </span>
           <span className="text-accent-400">{v.cta}</span>
         </div>
       )}
