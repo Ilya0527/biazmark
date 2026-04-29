@@ -1,0 +1,117 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+# Render auto-deploys on push to main (autoDeployTrigger: commit, configured on
+# the service). This workflow:
+#   1. Waits for that auto-deploy to complete
+#   2. Curls /healthz on the new deploy to verify it actually came up
+#   3. Triggers a Vercel production deploy for the frontend
+#   4. Builds the Android APK and uploads as a workflow artifact
+# Each job no-ops gracefully when its required secrets aren't configured.
+
+jobs:
+  verify-backend:
+    name: Verify Render deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Wait for Render to pick up the push
+        run: sleep 60
+      - name: Probe /healthz (up to 5 min)
+        run: |
+          for i in $(seq 1 30); do
+            STATUS=$(curl -sS -o /dev/null -w "%{http_code}" https://api.autocmo.app/healthz || echo "000")
+            echo "[$i/30] /healthz → $STATUS"
+            if [ "$STATUS" = "200" ]; then echo "✓ backend live"; exit 0; fi
+            sleep 10
+          done
+          echo "::error::Backend did not return 200 after 5 minutes"
+          exit 1
+      - name: Probe /readyz
+        run: |
+          curl -sS https://api.autocmo.app/readyz | tee /tmp/r.json
+          test "$(jq -r .status < /tmp/r.json)" = "ok" || (echo "::error::readyz not ok" && exit 1)
+
+  frontend-vercel:
+    name: Frontend → Vercel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate on secret
+        id: gate
+        run: |
+          if [ -n "${{ secrets.VERCEL_TOKEN }}" ] && [ -n "${{ secrets.VERCEL_ORG_ID }}" ] && [ -n "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Vercel secrets not set — skipping. Vercel's native GitHub integration may still deploy automatically."
+          fi
+      - name: Install Vercel CLI
+        if: steps.gate.outputs.enabled == 'true'
+        run: npm install -g vercel@latest
+      - name: Pull env
+        if: steps.gate.outputs.enabled == 'true'
+        working-directory: frontend
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Build
+        if: steps.gate.outputs.enabled == 'true'
+        working-directory: frontend
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Deploy
+        if: steps.gate.outputs.enabled == 'true'
+        working-directory: frontend
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  mobile-android:
+    name: Mobile → Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: mobile/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install mobile deps
+        working-directory: mobile
+        run: npm ci
+      - name: Sync Capacitor
+        working-directory: mobile
+        run: npx cap sync android
+        env:
+          AUTOCMO_URL: ${{ secrets.AUTOCMO_URL || 'https://autocmo.app' }}
+      - name: Restore keystore from secret (optional)
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > mobile/biazmark-release.keystore
+          cat > mobile/android/keystore.properties <<EOF
+          storeFile=../../biazmark-release.keystore
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          EOF
+      - name: Build release APK
+        working-directory: mobile/android
+        run: ./gradlew assembleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autocmo-android-release
+          path: mobile/android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
