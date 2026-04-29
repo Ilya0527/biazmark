@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * Ambient background — refined Anglo-modern, scroll-aware, cursor-aware.
+ * Ambient background — refined Anglo-modern, scroll-aware, cursor-aware,
+ * subtly thematic for an autonomous-marketing product.
  *
  * Composition:
  *   • 3 soft tinted gradient washes (coral / navy / sun) drifting at slow,
@@ -9,19 +10,32 @@
  *   • Whisper-thin hairline grid (static).
  *   • 6 sparse editorial marks (dot, diamond, line, ring, ×, triangle) that
  *     lean slightly toward the cursor like compass needles toward magnetic
- *     north — subtle, ~14-22px max pull. Combined with scroll parallax for
- *     a layered feel.
+ *     north — subtle, ~14-22px max pull. Combined with scroll parallax.
+ *   • Whisper words: a single italic serif word cross-fades through the
+ *     5-agent verbs (researching · strategising · creating · publishing ·
+ *     optimising · learning). Tells you what kind of site you're on without
+ *     ever shouting it.
  *
  * Mobile-friendly:
- *   • Pure CSS transforms via framer-motion. No canvas, no rAF, no JS work
- *     beyond a single passive mousemove listener (which is no-op on touch).
+ *   • Pure CSS transforms via framer-motion. No canvas, no rAF.
+ *   • Single passive mousemove listener (no-op on touch).
  *   • will-change: transform on moving elements only.
- *   • Respects prefers-reduced-motion → all parallax + cursor-pull freeze.
- *   • Disabled cursor-pull on touch devices (matchMedia '(hover: hover)').
+ *   • Respects prefers-reduced-motion → all parallax + cursor-pull freeze;
+ *     whisper word cycles slower (8s) so it's still informative but inert.
  */
 
 import { useEffect, useId, useState } from "react";
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+
+const WHISPER_WORDS = [
+  "researching",
+  "strategising",
+  "creating",
+  "publishing",
+  "analysing",
+  "optimising",
+  "learning",
+];
 
 export default function AmbientBackground({
   intensity = 0.6,
@@ -84,6 +98,16 @@ export default function AmbientBackground({
 
   // Reduce-motion: freeze every motion value at 0
   const N = (mv: any) => (reduce ? 0 : mv);
+
+  // Whisper word — cycles every ~4s, cross-fading
+  const [wordIdx, setWordIdx] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(
+      () => setWordIdx((i) => (i + 1) % WHISPER_WORDS.length),
+      4000,
+    );
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div
@@ -208,6 +232,38 @@ export default function AmbientBackground({
           </svg>
         </motion.span>
       </motion.div>
+
+      {/* ─── Whisper word — italic serif, cross-fades through agent verbs ─── */}
+      <div
+        style={{
+          position: "absolute",
+          right: "8%",
+          bottom: "26%",
+          fontFamily: '"Instrument Serif", Georgia, serif',
+          fontStyle: "italic",
+          fontSize: "clamp(64px, 9vw, 132px)",
+          color: "var(--ink)",
+          opacity: 0.045,
+          letterSpacing: "-0.04em",
+          lineHeight: 1,
+          userSelect: "none",
+          pointerEvents: "none",
+          transform: "rotate(-4deg)",
+        }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={WHISPER_WORDS[wordIdx]}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            style={{ display: "inline-block" }}
+          >
+            {WHISPER_WORDS[wordIdx]}
+          </motion.span>
+        </AnimatePresence>
+      </div>
 
       {/* Bottom-right tiny triangle (scroll rotates it) */}
       <motion.div style={{ y: N(yB), rotate: N(rotR), position: "absolute", bottom: "8%", right: "18%", willChange: "transform" }}>

@@ -34,9 +34,15 @@ type Trick =
   | "coffee"
   | "compass"
   | "lightning"
-  | "planet";
+  | "planet"
+  | "square"
+  | "triangle"
+  | "rectangle";
 
-const TRICKS: Trick[] = ["star", "heart", "airplane", "sparkles", "bone", "coffee", "compass", "lightning", "planet"];
+const TRICKS: Trick[] = [
+  "star", "heart", "airplane", "sparkles", "bone", "coffee",
+  "compass", "lightning", "planet", "square", "triangle", "rectangle",
+];
 
 function detectMode(target: EventTarget | null): { mode: Mode; label: string } {
   if (!(target instanceof Element)) return { mode: "default", label: "" };
@@ -84,19 +90,34 @@ export default function Cursor() {
   // Click bursts
   const [bursts, setBursts] = useState<{ x: number; y: number; id: number }[]>([]);
 
-  // Random trick scheduler — runs only while we're in default mode.
+  // Idle detection — when cursor stops moving, it shrinks to a tiny dot.
+  // When it moves, it expands back. Uses a ref-based timestamp so we don't
+  // tie the timer to React state churn.
+  const [isIdle, setIsIdle] = useState(false);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Random trick scheduler — runs on a stable interval, ignores mode changes
+  // (was previously resetting every time the user hovered something). Uses
+  // refs so we never re-create the timer.
   const [trick, setTrick] = useState<Trick | null>(null);
+  const modeRef = useRef(mode);
+  const trickRef = useRef(trick);
+  useEffect(() => { modeRef.current = mode; }, [mode]);
+  useEffect(() => { trickRef.current = trick; }, [trick]);
+
   useEffect(() => {
-    if (mode !== "default" || trick) return;
-    const next = 12000 + Math.random() * 10000; // 12-22 seconds
-    const t = setTimeout(() => {
+    // Check every 2.5s. Only fire when in default mode + no current trick +
+    // ~33% probability per check → expected fire ≈ every 8s. Plenty visible.
+    const interval = setInterval(() => {
+      if (modeRef.current !== "default") return;
+      if (trickRef.current) return;
+      if (Math.random() > 0.33) return;
       const pick = TRICKS[Math.floor(Math.random() * TRICKS.length)];
       setTrick(pick);
-      // each trick lives ~2.5s
       setTimeout(() => setTrick(null), 2600);
-    }, next);
-    return () => clearTimeout(t);
-  }, [mode, trick]);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!window.matchMedia("(hover: hover)").matches) return;
@@ -118,6 +139,11 @@ export default function Cursor() {
       }
       lastX = e.clientX;
       lastY = e.clientY;
+
+      // Idle: any movement wakes the cursor up; restart the timer
+      if (isIdle) setIsIdle(false);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = setTimeout(() => setIsIdle(true), 600);
 
       // trail
       trailIdRef.current += 1;
@@ -201,23 +227,26 @@ export default function Cursor() {
             mode === "input"  ? 4 :
             mode === "code"   ? 22 :
             mode === "image"  ? 56 :
-            28,
+            isIdle           ? 8 :    // IDLE: shrink to a small dot
+            32,                        // MOVING: full ring (slightly larger than before)
           height:
             mode === "button" ? 56 :
             mode === "input"  ? 26 :
             mode === "code"   ? 22 :
             mode === "image"  ? 56 :
-            28,
+            isIdle           ? 8 :    // IDLE
+            32,                        // MOVING
           borderRadius:
             mode === "input" || mode === "code" ? 2 :
             999,
           backgroundColor:
-            mode === "button" ? "rgba(220,76,62,0.12)" :
+            mode === "button" ? "rgba(194,91,77,0.10)" :
             mode === "input"  ? "var(--ink)" :
             mode === "code"   ? "var(--ink)" :
             mode === "image"  ? "rgba(13,13,16,0.04)" :
-            "rgba(13,13,16,0)",
-          borderWidth: mode === "input" || mode === "code" ? 0 : 1.5,
+            isIdle           ? "var(--ink)" :         // IDLE: solid dot
+            "rgba(194,91,77,0.05)",                    // MOVING: faint coral wash inside
+          borderWidth: mode === "input" || mode === "code" || isIdle ? 0 : 1.5,
           borderColor:
             mode === "button" ? "var(--coral)" :
             mode === "image"  ? "var(--ink)" :
@@ -229,20 +258,21 @@ export default function Cursor() {
         <ModeContent mode={mode} label={label} angle={angle} />
       </motion.div>
 
-      {/* DOT — instant follow, hides when ring takes over OR when a trick is on */}
+      {/* CENTER DOT — only visible while moving in default mode (the ring already
+          collapses to a solid dot when idle, so we hide this then to avoid double). */}
       <motion.div
         aria-hidden
         style={{
           x, y, translateX: "-50%", translateY: "-50%",
           position: "fixed", top: 0, left: 0,
-          width: 6, height: 6, borderRadius: 999,
-          background: "var(--ink)",
+          width: 4, height: 4, borderRadius: 999,
+          background: "var(--coral)",
           pointerEvents: "none",
           zIndex: 9999,
         }}
         animate={{
-          opacity: mode === "default" && !trick ? 1 : 0,
-          scale:   mode === "default" && !trick ? 1 : 0.3,
+          opacity: mode === "default" && !trick && !isIdle ? 1 : 0,
+          scale:   mode === "default" && !trick && !isIdle ? 1 : 0.2,
         }}
         transition={{ duration: 0.15 }}
       />
@@ -359,7 +389,88 @@ function TrickContent({ trick }: { trick: Trick }) {
     case "compass": return <TrickCompass />;
     case "lightning": return <TrickLightning />;
     case "planet": return <TrickPlanet />;
+    case "square": return <TrickSquare />;
+    case "triangle": return <TrickTriangle />;
+    case "rectangle": return <TrickRectangle />;
   }
+}
+
+/* ─── Shape morph tricks (geometric primitives) ─── */
+
+function TrickSquare() {
+  return (
+    <motion.div
+      style={{ marginLeft: -16, marginTop: -16 }}
+      initial={{ scale: 0, rotate: 0, opacity: 0 }}
+      animate={{
+        scale:   [0, 1, 1, 1, 0],
+        rotate:  [0, 90, 180, 270, 360],
+        opacity: [0, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 2.5, ease: "easeInOut" }}
+    >
+      <div
+        style={{
+          width: 32, height: 32,
+          background: "var(--coral)",
+          border: "2px solid var(--ink)",
+        }}
+      />
+    </motion.div>
+  );
+}
+
+function TrickTriangle() {
+  return (
+    <motion.svg
+      width="34" height="30" viewBox="0 0 34 30"
+      style={{ marginLeft: -17, marginTop: -15 }}
+      initial={{ scale: 0, rotate: -180, opacity: 0 }}
+      animate={{
+        scale:   [0, 1.1, 1, 1, 0],
+        rotate:  [0, 120, 240, 360],
+        opacity: [0, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 2.5, ease: "easeInOut" }}
+    >
+      <polygon
+        points="17,2 32,28 2,28"
+        fill="var(--sun)"
+        stroke="var(--ink)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+function TrickRectangle() {
+  // A long horizontal bar that orbits like a clock hand around the cursor.
+  return (
+    <motion.div
+      aria-hidden
+      style={{
+        position: "absolute",
+        marginLeft: -36, marginTop: -3,
+        width: 72, height: 6,
+      }}
+      initial={{ rotate: 0, opacity: 0, scaleX: 0 }}
+      animate={{
+        rotate:  [0, 90, 180, 270, 360],
+        opacity: [0, 1, 1, 1, 0],
+        scaleX:  [0, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 2.5, ease: "easeInOut" }}
+    >
+      <div
+        style={{
+          width: "100%", height: "100%",
+          background: "var(--ink)",
+          borderRadius: 1,
+        }}
+      />
+    </motion.div>
+  );
 }
 
 function TrickStar() {
