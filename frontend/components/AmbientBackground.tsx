@@ -66,9 +66,9 @@ export default function AmbientBackground({
           position: "absolute",
           top: "-180px", right: "-160px",
           width: 620, height: 620,
-          background: "radial-gradient(circle, rgba(220,76,62,0.32), transparent 70%)",
+          background: "radial-gradient(circle, rgba(194,91,77,0.22), transparent 70%)",
           filter: "blur(60px)",
-          opacity: 0.7 * o,
+          opacity: 0.6 * o,
         }}
       />
       <motion.div
@@ -78,9 +78,9 @@ export default function AmbientBackground({
           position: "absolute",
           bottom: "-160px", left: "-140px",
           width: 540, height: 540,
-          background: "radial-gradient(circle, rgba(26,36,64,0.18), transparent 70%)",
+          background: "radial-gradient(circle, rgba(26,36,64,0.12), transparent 70%)",
           filter: "blur(70px)",
-          opacity: 0.8 * o,
+          opacity: 0.7 * o,
         }}
       />
       <motion.div
@@ -90,9 +90,9 @@ export default function AmbientBackground({
           position: "absolute",
           top: "30%", left: "30%",
           width: 460, height: 460,
-          background: "radial-gradient(circle, rgba(244,193,77,0.22), transparent 70%)",
+          background: "radial-gradient(circle, rgba(232,200,120,0.18), transparent 70%)",
           filter: "blur(80px)",
-          opacity: 0.55 * o,
+          opacity: 0.45 * o,
         }}
       />
 

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Multi-state contextual cursor.
+ * Multi-state contextual cursor + random easter-egg "tricks".
  *
  *   default  ─  small coral dot + comet trail (6 fading echoes)
  *   button   ─  ring expands to 56px, arrow inside that POINTS the direction
@@ -10,7 +10,11 @@
  *   code     ─  terminal block ▮ in mono
  *   image    ─  magnifier circle with diagonal handle
  *
- *   click    ─  4-particle burst radiating outward, then fade
+ *   click    ─  6-particle burst radiating outward, then fade
+ *
+ *   🎁 TRICKS — every 12-22 seconds while in default mode the dot becomes one
+ *      of these for ~2.5s then returns to normal. Pure delight, no purpose.
+ *      star · heart · airplane · sparkles · bone · coffee · compass · lightning · planet
  *
  * Mode is detected from `event.target.closest(...)` — every interactive
  * element gets its own treatment automatically. Optional `data-cursor` attr
@@ -21,6 +25,18 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, type MotionValue } from "framer-motion";
 
 type Mode = "default" | "button" | "input" | "code" | "image";
+type Trick =
+  | "star"
+  | "heart"
+  | "airplane"
+  | "sparkles"
+  | "bone"
+  | "coffee"
+  | "compass"
+  | "lightning"
+  | "planet";
+
+const TRICKS: Trick[] = ["star", "heart", "airplane", "sparkles", "bone", "coffee", "compass", "lightning", "planet"];
 
 function detectMode(target: EventTarget | null): { mode: Mode; label: string } {
   if (!(target instanceof Element)) return { mode: "default", label: "" };
@@ -67,6 +83,20 @@ export default function Cursor() {
 
   // Click bursts
   const [bursts, setBursts] = useState<{ x: number; y: number; id: number }[]>([]);
+
+  // Random trick scheduler — runs only while we're in default mode.
+  const [trick, setTrick] = useState<Trick | null>(null);
+  useEffect(() => {
+    if (mode !== "default" || trick) return;
+    const next = 12000 + Math.random() * 10000; // 12-22 seconds
+    const t = setTimeout(() => {
+      const pick = TRICKS[Math.floor(Math.random() * TRICKS.length)];
+      setTrick(pick);
+      // each trick lives ~2.5s
+      setTimeout(() => setTrick(null), 2600);
+    }, next);
+    return () => clearTimeout(t);
+  }, [mode, trick]);
 
   useEffect(() => {
     if (!window.matchMedia("(hover: hover)").matches) return;
@@ -199,7 +229,7 @@ export default function Cursor() {
         <ModeContent mode={mode} label={label} angle={angle} />
       </motion.div>
 
-      {/* DOT — instant follow, hides when ring takes over */}
+      {/* DOT — instant follow, hides when ring takes over OR when a trick is on */}
       <motion.div
         aria-hidden
         style={{
@@ -211,11 +241,29 @@ export default function Cursor() {
           zIndex: 9999,
         }}
         animate={{
-          opacity: mode === "default" ? 1 : 0,
-          scale:   mode === "default" ? 1 : 0.3,
+          opacity: mode === "default" && !trick ? 1 : 0,
+          scale:   mode === "default" && !trick ? 1 : 0.3,
         }}
         transition={{ duration: 0.15 }}
       />
+
+      {/* TRICK — random easter-egg cursor effect */}
+      <AnimatePresence>
+        {mode === "default" && trick && (
+          <motion.div
+            key={trick + trailIdRef.current}
+            aria-hidden
+            style={{
+              x, y, translateX: "-50%", translateY: "-50%",
+              position: "fixed", top: 0, left: 0,
+              pointerEvents: "none",
+              zIndex: 9999,
+            }}
+          >
+            <TrickContent trick={trick} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* CLICK BURSTS */}
       <AnimatePresence>
@@ -296,6 +344,256 @@ function ModeContent({
     );
   }
   return null;
+}
+
+/* ─── Random easter-egg tricks ─── */
+
+function TrickContent({ trick }: { trick: Trick }) {
+  switch (trick) {
+    case "star": return <TrickStar />;
+    case "heart": return <TrickHeart />;
+    case "airplane": return <TrickAirplane />;
+    case "sparkles": return <TrickSparkles />;
+    case "bone": return <TrickBone />;
+    case "coffee": return <TrickCoffee />;
+    case "compass": return <TrickCompass />;
+    case "lightning": return <TrickLightning />;
+    case "planet": return <TrickPlanet />;
+  }
+}
+
+function TrickStar() {
+  return (
+    <motion.svg
+      width="28" height="28" viewBox="0 0 24 24"
+      style={{ marginLeft: -14, marginTop: -14 }}
+      initial={{ scale: 0, rotate: -180, opacity: 0 }}
+      animate={{ scale: [0, 1.2, 1, 1, 0], rotate: [0, 360, 720], opacity: [0, 1, 1, 1, 0] }}
+      transition={{ duration: 2.5, ease: "easeInOut" }}
+    >
+      <path
+        d="M12 2l2.6 6.5L21 9.6l-5 4.6 1.4 6.6L12 17.5l-5.4 3.3L8 14.2 3 9.6l6.4-1.1L12 2z"
+        fill="var(--coral)"
+        stroke="var(--ink)"
+        strokeWidth="1"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+function TrickHeart() {
+  return (
+    <motion.svg
+      width="22" height="22" viewBox="0 0 24 24"
+      style={{ marginLeft: -11, marginTop: -11 }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{
+        scale: [0, 1.3, 1, 1.3, 1, 1.3, 0],
+        opacity: [0, 1, 1, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 2.5, times: [0, 0.15, 0.3, 0.5, 0.7, 0.85, 1] }}
+    >
+      <path
+        d="M12 21s-7-4.5-9.5-9C1 9 2.5 5 6.5 5c2 0 3.5 1 5.5 3 2-2 3.5-3 5.5-3 4 0 5.5 4 4 7-2.5 4.5-9.5 9-9.5 9z"
+        fill="var(--coral)"
+        stroke="var(--ink)"
+        strokeWidth="0.8"
+      />
+    </motion.svg>
+  );
+}
+
+function TrickAirplane() {
+  return (
+    <motion.svg
+      width="26" height="26" viewBox="0 0 24 24"
+      style={{ marginLeft: -13, marginTop: -13 }}
+      initial={{ scale: 0, x: -40, y: 30, rotate: -45, opacity: 0 }}
+      animate={{
+        scale: [0, 1, 1, 1, 0],
+        x:     [-40, 0, 0, 50, 80],
+        y:     [30, 0, 0, -30, -60],
+        rotate:[-45, -20, -20, 0, 20],
+        opacity:[0, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 2.5, ease: "easeOut" }}
+    >
+      <path
+        d="M2.5 19.5l19-8-19-8 0 6.5 14 1.5-14 1.5z"
+        fill="var(--ink)"
+        stroke="var(--ink)"
+        strokeWidth="0.5"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+function TrickSparkles() {
+  // 5 sparkles popping in a constellation around the cursor
+  const positions = [
+    { x: -20, y: -16, delay: 0,    size: 10 },
+    { x:  18, y: -20, delay: 0.2,  size: 8  },
+    { x: -22, y:  14, delay: 0.4,  size: 7  },
+    { x:  20, y:  16, delay: 0.6,  size: 9  },
+    { x:   0, y:  24, delay: 0.8,  size: 6  },
+  ];
+  return (
+    <>
+      {positions.map((p, i) => (
+        <motion.svg
+          key={i}
+          width={p.size} height={p.size} viewBox="0 0 24 24"
+          style={{ position: "absolute", left: p.x, top: p.y, marginLeft: -p.size/2, marginTop: -p.size/2 }}
+          initial={{ scale: 0, opacity: 0, rotate: 0 }}
+          animate={{ scale: [0, 1.2, 0], opacity: [0, 1, 0], rotate: [0, 180] }}
+          transition={{ duration: 1.4, delay: p.delay, ease: "easeOut" }}
+        >
+          <path
+            d="M12 2l2 8 8 2-8 2-2 8-2-8-8-2 8-2z"
+            fill="var(--coral)"
+          />
+        </motion.svg>
+      ))}
+    </>
+  );
+}
+
+function TrickBone() {
+  // The user mentioned "כלב ועצם" — the bone, wagging.
+  return (
+    <motion.svg
+      width="28" height="14" viewBox="0 0 28 14"
+      style={{ marginLeft: -14, marginTop: -7 }}
+      initial={{ scale: 0, rotate: 0, opacity: 0 }}
+      animate={{
+        scale:  [0, 1, 1, 1, 1, 1, 0],
+        rotate: [0, -20, 20, -20, 20, 0, 0],
+        opacity:[0, 1, 1, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 2.5, ease: "easeInOut" }}
+    >
+      <path
+        d="M5 7 C5 4, 2 4, 2 7 C2 10, 5 10, 5 7 L23 7 C23 10, 26 10, 26 7 C26 4, 23 4, 23 7 Z"
+        fill="#f7f4ea"
+        stroke="var(--ink)"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+function TrickCoffee() {
+  return (
+    <motion.div
+      style={{ marginLeft: -14, marginTop: -16, position: "relative" }}
+      initial={{ scale: 0, y: 10, opacity: 0 }}
+      animate={{
+        scale: [0, 1, 1, 1, 0],
+        y:     [10, 0, -2, 0, -10],
+        opacity:[0, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 2.5, ease: "easeInOut" }}
+    >
+      {/* steam */}
+      <motion.svg
+        width="28" height="10" viewBox="0 0 28 10"
+        style={{ position: "absolute", top: -8, left: 0 }}
+        animate={{ y: [-2, -6, -10], opacity: [0.8, 0.4, 0] }}
+        transition={{ duration: 1.4, repeat: 1, ease: "easeOut" }}
+      >
+        <path d="M8 9c0-2 2-3 2-5s-2-3-2-5" stroke="var(--ink)" strokeWidth="1.2" fill="none" opacity="0.6" />
+        <path d="M16 9c0-2 2-3 2-5s-2-3-2-5" stroke="var(--ink)" strokeWidth="1.2" fill="none" opacity="0.6" />
+      </motion.svg>
+      {/* cup */}
+      <svg width="28" height="22" viewBox="0 0 28 22">
+        <path
+          d="M3 4 L21 4 L20 18 C20 20 18 21 16 21 L8 21 C6 21 4 20 4 18 Z"
+          fill="#f7f4ea" stroke="var(--ink)" strokeWidth="1.4" strokeLinejoin="round"
+        />
+        <path
+          d="M21 8 C25 8 25 14 21 14"
+          fill="none" stroke="var(--ink)" strokeWidth="1.4"
+        />
+        <ellipse cx="12" cy="6" rx="7" ry="1.2" fill="var(--coral)" opacity="0.75" />
+      </svg>
+    </motion.div>
+  );
+}
+
+function TrickCompass() {
+  return (
+    <motion.svg
+      width="28" height="28" viewBox="0 0 24 24"
+      style={{ marginLeft: -14, marginTop: -14 }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
+      transition={{ duration: 2.5 }}
+    >
+      <circle cx="12" cy="12" r="10" fill="#f7f4ea" stroke="var(--ink)" strokeWidth="1.2" />
+      <motion.g
+        style={{ originX: "12px", originY: "12px" }}
+        animate={{ rotate: [0, 270, 90, 360, 720] }}
+        transition={{ duration: 2.5, ease: "easeInOut" }}
+      >
+        <polygon points="12,4 14,12 12,20 10,12" fill="var(--coral)" />
+        <circle cx="12" cy="12" r="1.4" fill="var(--ink)" />
+      </motion.g>
+    </motion.svg>
+  );
+}
+
+function TrickLightning() {
+  return (
+    <motion.svg
+      width="22" height="28" viewBox="0 0 24 30"
+      style={{ marginLeft: -11, marginTop: -14 }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{
+        scale:   [0, 1.2, 1, 1.3, 1, 0],
+        opacity: [0, 1, 1, 1, 1, 0],
+        rotate:  [-10, 5, -5, 10, 0],
+      }}
+      transition={{ duration: 1.6, ease: "easeOut" }}
+    >
+      <path
+        d="M14 1 L4 16 L11 16 L9 29 L20 13 L13 13 Z"
+        fill="var(--sun)"
+        stroke="var(--ink)"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+function TrickPlanet() {
+  return (
+    <motion.div
+      style={{ marginLeft: -22, marginTop: -22 }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
+      transition={{ duration: 2.5 }}
+    >
+      <motion.svg
+        width="44" height="44" viewBox="0 0 44 44"
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 2.5, ease: "linear" }}
+      >
+        {/* ring */}
+        <ellipse
+          cx="22" cy="22" rx="20" ry="6"
+          fill="none" stroke="var(--ink)" strokeWidth="1.2"
+        />
+        {/* planet body */}
+        <circle cx="22" cy="22" r="8" fill="var(--coral)" stroke="var(--ink)" strokeWidth="1" />
+        {/* small moon */}
+        <circle cx="42" cy="22" r="2" fill="var(--ink)" />
+      </motion.svg>
+    </motion.div>
+  );
 }
 
 function Burst({ x, y }: { x: number; y: number }) {
