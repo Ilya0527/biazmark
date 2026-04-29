@@ -334,6 +334,13 @@
   will-change: transform;
 }
 
+/* Ambient radar pulse — soft expanding ring, used in AmbientBackground */
+@keyframes ambient-pulse {
+  0%   { transform: scale(0.2); opacity: 0;    }
+  10%  {                        opacity: 0.18; }
+  100% { transform: scale(2.2); opacity: 0;    }
+}
+
 @keyframes fade {
   from { opacity: 0; }
   to   { opacity: 1; }

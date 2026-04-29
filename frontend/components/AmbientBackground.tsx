@@ -95,6 +95,19 @@ export default function AmbientBackground({
   const m5y = useTransform(scy, [-0.5, 0.5], [ 18, -18]);
   const m6x = useTransform(scx, [-0.5, 0.5], [ 20, -20]);
   const m6y = useTransform(scy, [-0.5, 0.5], [-10,  10]);
+  // 6 more for the new marks
+  const m7x = useTransform(scx, [-0.5, 0.5], [-16,  16]);
+  const m7y = useTransform(scy, [-0.5, 0.5], [ 10, -10]);
+  const m8x = useTransform(scx, [-0.5, 0.5], [ 14, -14]);
+  const m8y = useTransform(scy, [-0.5, 0.5], [-16,  16]);
+  const m9x  = useTransform(scx, [-0.5, 0.5], [-22,  22]);
+  const m9y  = useTransform(scy, [-0.5, 0.5], [ 14, -14]);
+  const m10x = useTransform(scx, [-0.5, 0.5], [ 18, -18]);
+  const m10y = useTransform(scy, [-0.5, 0.5], [-12,  12]);
+  const m11x = useTransform(scx, [-0.5, 0.5], [-12,  12]);
+  const m11y = useTransform(scy, [-0.5, 0.5], [-20,  20]);
+  const m12x = useTransform(scx, [-0.5, 0.5], [ 22, -22]);
+  const m12y = useTransform(scy, [-0.5, 0.5], [  8,  -8]);
 
   // Reduce-motion: freeze every motion value at 0
   const N = (mv: any) => (reduce ? 0 : mv);
@@ -241,7 +254,157 @@ export default function AmbientBackground({
           </svg>
         </motion.span>
       </motion.div>
+
+      {/* ─── 6 more editorial marks for richness ─── */}
+
+      {/* Plus sign — top-mid */}
+      <motion.div style={{ y: N(yC), position: "absolute", top: "8%", left: "44%", willChange: "transform" }}>
+        <motion.span style={{ x: N(m7x), y: N(m7y), display: "block", width: 14, height: 14, opacity: 0.32 }}>
+          <svg viewBox="0 0 14 14" width="14" height="14">
+            <line x1="7" y1="2" x2="7" y2="12" stroke="var(--navy)" strokeWidth="1.4" strokeLinecap="round" />
+            <line x1="2" y1="7" x2="12" y2="7" stroke="var(--navy)" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        </motion.span>
+      </motion.div>
+
+      {/* Asterisk — left mid-upper */}
+      <motion.div style={{ y: N(yD), rotate: N(rotR), position: "absolute", top: "32%", left: "20%", willChange: "transform" }}>
+        <motion.span style={{ x: N(m8x), y: N(m8y), display: "block", width: 16, height: 16, opacity: 0.35 }}>
+          <svg viewBox="0 0 16 16" width="16" height="16">
+            <line x1="8" y1="1"  x2="8"  y2="15" stroke="var(--coral)" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1="1" y1="8"  x2="15" y2="8"  stroke="var(--coral)" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1="3" y1="3"  x2="13" y2="13" stroke="var(--coral)" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1="13" y1="3" x2="3"  y2="13" stroke="var(--coral)" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        </motion.span>
+      </motion.div>
+
+      {/* Three dots vertical — right mid-upper */}
+      <motion.div style={{ y: N(yB), position: "absolute", top: "28%", right: "22%", willChange: "transform" }}>
+        <motion.span style={{ x: N(m9x), y: N(m9y), display: "flex", flexDirection: "column", gap: 3, opacity: 0.4 }}>
+          <span style={{ width: 4, height: 4, borderRadius: 999, background: "var(--ink)" }} />
+          <span style={{ width: 4, height: 4, borderRadius: 999, background: "var(--ink)" }} />
+          <span style={{ width: 4, height: 4, borderRadius: 999, background: "var(--ink)" }} />
+        </motion.span>
+      </motion.div>
+
+      {/* Diagonal slash — left lower */}
+      <motion.div style={{ y: N(yC), position: "absolute", bottom: "26%", left: "30%", willChange: "transform" }}>
+        <motion.span style={{ x: N(m10x), y: N(m10y), display: "block", width: 22, height: 22, opacity: 0.3 }}>
+          <svg viewBox="0 0 22 22" width="22" height="22">
+            <line x1="3" y1="19" x2="19" y2="3" stroke="var(--ink)" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        </motion.span>
+      </motion.div>
+
+      {/* Half-circle — right mid */}
+      <motion.div style={{ y: N(yD), position: "absolute", top: "62%", left: "48%", willChange: "transform" }}>
+        <motion.span style={{ x: N(m11x), y: N(m11y), display: "block", width: 24, height: 12, opacity: 0.35 }}>
+          <svg viewBox="0 0 24 12" width="24" height="12">
+            <path d="M2 12 A10 10 0 0 1 22 12" fill="none" stroke="var(--coral)" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        </motion.span>
+      </motion.div>
+
+      {/* Open square outline — bottom-mid */}
+      <motion.div style={{ y: N(yB), rotate: N(rotR), position: "absolute", bottom: "30%", right: "32%", willChange: "transform" }}>
+        <motion.span style={{ x: N(m12x), y: N(m12y), display: "block", width: 16, height: 16, border: "1px solid var(--navy)", opacity: 0.32, willChange: "transform" }} />
+      </motion.div>
+
+      {/* ─── PULSE RING — radar-style 'system alive' signal in bottom-left ─── */}
+      {!reduce && (
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            bottom: "12%",
+            left: "8%",
+            width: 0, height: 0,
+            pointerEvents: "none",
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="ambient-pulse"
+              style={{
+                position: "absolute",
+                left: -100, top: -100,
+                width: 200, height: 200,
+                borderRadius: 999,
+                border: "1px solid var(--coral)",
+                opacity: 0,
+                animation: `ambient-pulse 7s ${i * 2.3}s ease-out infinite`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* ─── FLOATING METRIC CHIPS — marketing telemetry drifting across ─── */}
+      {!reduce && (
+        <>
+          <DriftingMetric topPct={22} text="+18% CTR"     delaySec={2}  durationSec={42} />
+          <DriftingMetric topPct={48} text="ROAS 4.2×"    delaySec={11} durationSec={48} />
+          <DriftingMetric topPct={66} text="reach +12.4K" delaySec={20} durationSec={45} />
+          <DriftingMetric topPct={36} text="CPA −$3.20"   delaySec={28} durationSec={50} />
+          <DriftingMetric topPct={78} text="conv 2.8%"    delaySec={36} durationSec={44} />
+        </>
+      )}
     </div>
+  );
+}
+
+/* ─── DriftingMetric — small mono-font chip that drifts across horizontally ─── */
+
+function DriftingMetric({
+  topPct,
+  text,
+  delaySec,
+  durationSec,
+}: {
+  topPct: number;
+  text: string;
+  delaySec: number;
+  durationSec: number;
+}) {
+  return (
+    <motion.div
+      aria-hidden
+      initial={{ x: "-20vw", opacity: 0 }}
+      animate={{
+        x: "120vw",
+        opacity: [0, 0.18, 0.18, 0],
+      }}
+      transition={{
+        duration: durationSec,
+        delay: delaySec,
+        repeat: Infinity,
+        repeatType: "loop",
+        ease: "linear",
+        times: [0, 0.1, 0.9, 1],
+      }}
+      style={{
+        position: "absolute",
+        top: `${topPct}%`,
+        left: 0,
+        fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+        fontSize: "11px",
+        color: "var(--ink)",
+        background: "rgba(247,244,234,0.6)",
+        border: "1px solid var(--hair)",
+        borderRadius: 999,
+        padding: "3px 9px",
+        letterSpacing: "0.04em",
+        whiteSpace: "nowrap",
+        userSelect: "none",
+        pointerEvents: "none",
+        willChange: "transform, opacity",
+        backdropFilter: "blur(2px)",
+      }}
+    >
+      {text}
+    </motion.div>
   );
 }
 
