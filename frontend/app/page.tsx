@@ -10,6 +10,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import IconBadge from "@/components/IconBadge";
 import CopyButton from "@/components/CopyButton";
 import LiveDemo from "@/components/LiveDemo";
+import TheLoop from "@/components/TheLoop";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 
@@ -107,6 +108,9 @@ export default async function HomePage() {
       <section>
         <LiveDemo locale={locale} />
       </section>
+
+      {/* The autonomous loop — visual signature, infinite marquee */}
+      <TheLoop locale={locale} />
 
       {/* Stats */}
       <section className="grid md:grid-cols-3 gap-4">

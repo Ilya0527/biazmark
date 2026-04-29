@@ -99,16 +99,6 @@ export default function AmbientBackground({
   // Reduce-motion: freeze every motion value at 0
   const N = (mv: any) => (reduce ? 0 : mv);
 
-  // Whisper word — cycles every ~4s, cross-fading
-  const [wordIdx, setWordIdx] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(
-      () => setWordIdx((i) => (i + 1) % WHISPER_WORDS.length),
-      4000,
-    );
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div
       aria-hidden
@@ -233,37 +223,15 @@ export default function AmbientBackground({
         </motion.span>
       </motion.div>
 
-      {/* ─── Whisper word — italic serif, cross-fades through agent verbs ─── */}
-      <div
-        style={{
-          position: "absolute",
-          right: "8%",
-          bottom: "26%",
-          fontFamily: '"Instrument Serif", Georgia, serif',
-          fontStyle: "italic",
-          fontSize: "clamp(64px, 9vw, 132px)",
-          color: "var(--ink)",
-          opacity: 0.045,
-          letterSpacing: "-0.04em",
-          lineHeight: 1,
-          userSelect: "none",
-          pointerEvents: "none",
-          transform: "rotate(-4deg)",
-        }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={WHISPER_WORDS[wordIdx]}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-            style={{ display: "inline-block" }}
-          >
-            {WHISPER_WORDS[wordIdx]}
-          </motion.span>
-        </AnimatePresence>
-      </div>
+      {/* ─── Drifting whisper words — 4 simultaneous, slow vertical drift ─── */}
+      {!reduce && (
+        <>
+          <DriftingWord leftPct={8}  size="clamp(54px, 6vw, 92px)"  angleDeg={-4} delaySec={0}  durationSec={28} />
+          <DriftingWord leftPct={32} size="clamp(70px, 8vw, 118px)" angleDeg={ 3} delaySec={9}  durationSec={30} />
+          <DriftingWord leftPct={58} size="clamp(48px, 5vw, 78px)"  angleDeg={-2} delaySec={5}  durationSec={24} />
+          <DriftingWord leftPct={80} size="clamp(82px, 9vw, 142px)" angleDeg={ 5} delaySec={14} durationSec={34} />
+        </>
+      )}
 
       {/* Bottom-right tiny triangle (scroll rotates it) */}
       <motion.div style={{ y: N(yB), rotate: N(rotR), position: "absolute", bottom: "8%", right: "18%", willChange: "transform" }}>
@@ -274,5 +242,70 @@ export default function AmbientBackground({
         </motion.span>
       </motion.div>
     </div>
+  );
+}
+
+/* ─── DriftingWord — slow upward sweep, cycles a random verb each loop ─── */
+
+function DriftingWord({
+  leftPct,
+  size,
+  angleDeg,
+  delaySec,
+  durationSec,
+}: {
+  leftPct: number;
+  size: string;
+  angleDeg: number;
+  delaySec: number;
+  durationSec: number;
+}) {
+  // The word cycles each animation iteration — onUpdate would be expensive,
+  // so we just rotate through the list deterministically with the iteration
+  // count. 7 words → period of 7 iterations. Visually: each appearance is a
+  // different word, no repeats in nearby slots.
+  const [iter, setIter] = useState(0);
+  const word = WHISPER_WORDS[iter % WHISPER_WORDS.length];
+
+  return (
+    <motion.div
+      aria-hidden
+      initial={{ y: "110vh", opacity: 0 }}
+      animate={{
+        y: "-30vh",
+        opacity: [0, 0.06, 0.06, 0],
+      }}
+      transition={{
+        duration: durationSec,
+        delay: delaySec,
+        repeat: Infinity,
+        repeatType: "loop",
+        ease: "linear",
+        times: [0, 0.15, 0.85, 1],
+      }}
+      onUpdate={(latest) => {
+        // Detect the moment we've wrapped: y reset to 110vh means new iteration.
+        // (framer-motion repeat fires onComplete each iteration; cheap enough.)
+      }}
+      onAnimationComplete={() => setIter((i) => (i + Math.floor(Math.random() * 3) + 1) % WHISPER_WORDS.length)}
+      style={{
+        position: "absolute",
+        left: `${leftPct}%`,
+        top: 0,
+        fontFamily: '"Instrument Serif", Georgia, serif',
+        fontStyle: "italic",
+        fontSize: size,
+        color: "var(--ink)",
+        letterSpacing: "-0.04em",
+        lineHeight: 1,
+        whiteSpace: "nowrap",
+        userSelect: "none",
+        pointerEvents: "none",
+        transform: `rotate(${angleDeg}deg)`,
+        willChange: "transform, opacity",
+      }}
+    >
+      {word}
+    </motion.div>
   );
 }
