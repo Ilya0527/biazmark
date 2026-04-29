@@ -228,7 +228,7 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
                 type="submit"
                 disabled={busy || !industry.trim() || !description.trim()}
                 className="btn-primary"
-                data-cursor="run"
+                data-cursor="generate"
               >
                 {busy ? c.ctaRunning : c.cta}
               </button>

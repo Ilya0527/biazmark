@@ -69,13 +69,13 @@ export default async function HomePage() {
           </Reveal>
           <Reveal dir="up" delay={600}>
             <div className="flex flex-wrap gap-3 justify-center pt-4">
-              <MagneticButton href="/onboarding" className="btn-primary text-base px-6 py-3">
+              <MagneticButton href="/onboarding" className="btn-primary text-base px-6 py-3" data-cursor="start">
                 {tx("hero.cta.onboard")}
               </MagneticButton>
-              <Link href="/install" className="btn-secondary text-base px-6 py-3">
+              <Link href="/install" className="btn-secondary text-base px-6 py-3" data-cursor="install">
                 {tx("hero.cta.install")}
               </Link>
-              <Link href="/docs" className="btn-ghost text-base px-6 py-3">
+              <Link href="/docs" className="btn-ghost text-base px-6 py-3" data-cursor="docs">
                 {tx("hero.cta.docs")}
               </Link>
             </div>
