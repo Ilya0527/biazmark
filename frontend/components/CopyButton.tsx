@@ -52,7 +52,7 @@ export default function CopyButton({
       ? "btn-primary"
       : variant === "ghost"
         ? "btn-ghost"
-        : "inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-100 transition-colors";
+        : "inline-flex items-center gap-1.5 text-xs text-muted hover:text-ink-900 transition-colors";
 
   return (
     <button

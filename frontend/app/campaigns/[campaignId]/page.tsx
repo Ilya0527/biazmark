@@ -49,12 +49,12 @@ export default async function CampaignPage({
         <div>
           <Link
             href={`/dashboard/${campaign.business_id}`}
-            className="text-sm text-slate-400 hover:text-slate-200"
+            className="text-sm text-muted hover:text-ink-900"
           >
             {tx("camp.back")}
           </Link>
           <h1 className="text-3xl font-bold mt-1">{campaign.name}</h1>
-          <div className="flex items-center gap-3 mt-2 text-sm text-slate-400">
+          <div className="flex items-center gap-3 mt-2 text-sm text-muted">
             <span className={`badge ${campaign.status === "live" ? "badge-success" : "badge-muted"}`}>
               {campaign.status}
             </span>
@@ -82,24 +82,24 @@ export default async function CampaignPage({
               <div key={v.id} className="card">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <span className={`badge ${statusBadge(v.status)}`}>{v.status}</span>
-                  {v.meta?.angle && <span className="text-xs text-slate-500">{v.meta.angle}</span>}
+                  {v.meta?.angle && <span className="text-xs text-muted">{v.meta.angle}</span>}
                 </div>
                 <div className="font-semibold mb-1">{v.headline}</div>
-                <p className="text-sm text-slate-300 whitespace-pre-wrap">{v.body}</p>
+                <p className="text-sm text-ink-800 whitespace-pre-wrap">{v.body}</p>
                 {v.cta && (
                   <div className="mt-3 text-xs">
                     <span className="label !mb-0 me-2">{tx("camp.var.cta")}</span>
-                    <span className="text-accent-400">{v.cta}</span>
+                    <span className="text-coral">{v.cta}</span>
                   </div>
                 )}
                 {v.visual_prompt && (
-                  <div className="mt-3 text-xs text-slate-500">
+                  <div className="mt-3 text-xs text-muted">
                     <span className="label !mb-0 me-2">{tx("camp.var.visual")}</span>
                     {v.visual_prompt}
                   </div>
                 )}
                 {vm && (
-                  <div className="mt-4 pt-3 border-t border-ink-700 grid grid-cols-4 gap-2 text-xs">
+                  <div className="mt-4 pt-3 border-t border-ink-300 grid grid-cols-4 gap-2 text-xs">
                     <MiniStat label={tx("camp.mini.imp")} v={vm.impressions} />
                     <MiniStat label={tx("camp.mini.clk")} v={vm.clicks} />
                     <MiniStat label={tx("camp.mini.conv")} v={vm.conversions} />
@@ -133,7 +133,7 @@ function statusBadge(s: string) {
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="card">
-      <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted">{label}</div>
       <div className="text-xl font-semibold mt-1">{value}</div>
     </div>
   );
@@ -142,8 +142,8 @@ function Stat({ label, value }: { label: string; value: string | number }) {
 function MiniStat({ label, v }: { label: string; v: string | number }) {
   return (
     <div>
-      <div className="text-[10px] uppercase text-slate-500">{label}</div>
-      <div className="text-sm text-slate-200">{v}</div>
+      <div className="text-[10px] uppercase text-muted">{label}</div>
+      <div className="text-sm text-ink-900">{v}</div>
     </div>
   );
 }

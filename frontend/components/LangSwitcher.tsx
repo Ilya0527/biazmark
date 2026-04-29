@@ -50,7 +50,7 @@ export default function LangSwitcher({ initial }: { initial: Locale }) {
       {open && (
         <ul
           role="listbox"
-          className="absolute end-0 mt-2 min-w-[140px] glass rounded-xl py-1 shadow-2xl z-50 border border-ink-700/50"
+          className="absolute end-0 mt-2 min-w-[140px] glass rounded-xl py-1 shadow-2xl z-50 border border-ink-300"
         >
           {LOCALES.map((l) => (
             <li key={l}>
@@ -58,7 +58,7 @@ export default function LangSwitcher({ initial }: { initial: Locale }) {
                 type="button"
                 onClick={() => pick(l)}
                 className={`w-full text-start px-3 py-2 text-sm hover:bg-white/5 flex items-center justify-between gap-3 ${
-                  l === locale ? "text-accent-300" : "text-slate-300"
+                  l === locale ? "text-coral" : "text-ink-800"
                 }`}
                 role="option"
                 aria-selected={l === locale}

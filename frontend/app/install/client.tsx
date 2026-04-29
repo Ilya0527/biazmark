@@ -50,14 +50,14 @@ export default function InstallClient({ locale }: { locale: Locale }) {
         <FloatingOrbs count={6} seed={2} />
         <div className="relative z-10">
           <Reveal dir="up">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-slate-300 mb-4">
+            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-ink-800 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               {tx("install.badge")}
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-3">
               {tx("install.title.1")} <span className="text-gradient">{tx("install.title.2")}</span>
             </h1>
-            <p className="text-slate-400 max-w-xl mx-auto">{tx("install.subtitle")}</p>
+            <p className="text-muted max-w-xl mx-auto">{tx("install.subtitle")}</p>
           </Reveal>
         </div>
       </section>
@@ -84,16 +84,16 @@ export default function InstallClient({ locale }: { locale: Locale }) {
                 <IconBadge kind="code" color="indigo" size={32} />
                 <div>
                   <div className="font-semibold">{tx(`install.${active}`)}</div>
-                  <div className="text-xs text-slate-400">{tx(`install.${active}.desc`)}</div>
+                  <div className="text-xs text-muted">{tx(`install.${active}.desc`)}</div>
                 </div>
               </div>
               <CopyButton text={cmd} label={tx("install.copy")} variant="primary" />
             </div>
 
-            <div className="text-xs text-slate-500 mb-3">{tx(`install.${active}.hint`)}</div>
+            <div className="text-xs text-muted mb-3">{tx(`install.${active}.hint`)}</div>
 
             <div className="relative group" dir="ltr">
-              <pre className="bg-ink-900 border border-ink-700 rounded-xl p-4 overflow-x-auto text-sm font-mono text-slate-200">
+              <pre className="bg-paper border border-ink-300 rounded-xl p-4 overflow-x-auto text-sm font-mono text-ink-900">
                 <code>{cmd}</code>
               </pre>
               <div className="absolute top-2 right-2">
@@ -173,7 +173,7 @@ export default function InstallClient({ locale }: { locale: Locale }) {
                   {n}
                 </div>
                 <div className="font-semibold">{tx(`install.step.${n}.t`)}</div>
-                <div className="text-sm text-slate-400 mt-1">{tx(`install.step.${n}.d`)}</div>
+                <div className="text-sm text-muted mt-1">{tx(`install.step.${n}.d`)}</div>
               </div>
             </Reveal>
           ))}
@@ -188,10 +188,10 @@ export default function InstallClient({ locale }: { locale: Locale }) {
         <div className="card space-y-4 text-sm">
           {[1, 2, 3].map((n) => (
             <details key={n}>
-              <summary className="cursor-pointer font-medium text-slate-200">
+              <summary className="cursor-pointer font-medium text-ink-900">
                 {tx(`install.tr.${n}.q`)}
               </summary>
-              <div className="text-slate-400 mt-2 ps-4">{tx(`install.tr.${n}.a`)}</div>
+              <div className="text-muted mt-2 ps-4">{tx(`install.tr.${n}.a`)}</div>
             </details>
           ))}
         </div>

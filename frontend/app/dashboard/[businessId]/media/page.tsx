@@ -24,30 +24,30 @@ export default async function MediaPage({
   return (
     <div className="space-y-6">
       <div>
-        <Link href={`/dashboard/${businessId}`} className="text-sm text-slate-400 hover:text-slate-200">
+        <Link href={`/dashboard/${businessId}`} className="text-sm text-muted hover:text-ink-900">
           ← {biz.name}
         </Link>
         <h1 className="text-3xl font-bold mt-1">{tx("media.title")}</h1>
-        <p className="text-slate-400 mt-1">{tx("media.subtitle")}</p>
+        <p className="text-muted mt-1">{tx("media.subtitle")}</p>
       </div>
 
       {media.length === 0 ? (
-        <div className="card text-center text-slate-400 py-12">{tx("media.empty")}</div>
+        <div className="card text-center text-muted py-12">{tx("media.empty")}</div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {media.map((m) => (
             <div key={m.id} className="card p-2 overflow-hidden">
-              <div className="aspect-square bg-ink-900 rounded-lg overflow-hidden mb-2">
+              <div className="aspect-square bg-paper rounded-lg overflow-hidden mb-2">
                 {m.kind === "video" ? (
                   <video src={m.url} className="w-full h-full object-cover" controls />
                 ) : (
                   <img src={m.url} alt={m.prompt} className="w-full h-full object-cover" />
                 )}
               </div>
-              <div className="text-xs text-slate-400 line-clamp-2" title={m.prompt}>
+              <div className="text-xs text-muted line-clamp-2" title={m.prompt}>
                 {m.prompt}
               </div>
-              <div className="mt-1 flex items-center justify-between text-[10px] text-slate-500">
+              <div className="mt-1 flex items-center justify-between text-[10px] text-muted">
                 <span className="capitalize">{m.provider}</span>
                 <span>{m.width}×{m.height}</span>
               </div>

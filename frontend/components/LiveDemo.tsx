@@ -191,7 +191,7 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
         <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-pink-500/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-emerald-300 mb-3">
+          <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-coral mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             {c.badge}
           </div>
@@ -232,12 +232,12 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
               >
                 {busy ? c.ctaRunning : c.cta}
               </button>
-              <span className="text-xs text-slate-500 ms-2">{c.tryExample}:</span>
+              <span className="text-xs text-muted ms-2">{c.tryExample}:</span>
               {c.examples.map((ex, i) => (
                 <button
                   key={i}
                   type="button"
-                  className="text-xs px-2 py-1 rounded-md border border-ink-700 text-slate-400 hover:text-slate-200 hover:border-accent-500/40 transition-colors"
+                  className="text-xs px-2 py-1 rounded-md border border-ink-300 text-muted hover:text-ink-900 hover:border-accent-500/40 transition-colors"
                   onClick={() => fillExample(ex)}
                   disabled={busy}
                 >
@@ -255,7 +255,7 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="mt-5 flex items-center gap-3 text-sm text-slate-400"
+                className="mt-5 flex items-center gap-3 text-sm text-muted"
               >
                 <span className="flex gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent-400 animate-bounce [animation-delay:-0.3s]" />
@@ -282,7 +282,7 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="mt-5 card !border-amber-500/30 text-amber-200 text-sm"
+                className="mt-5 card !border-amber-500/30 text-coral text-sm"
               >
                 {error}
               </motion.div>
@@ -304,7 +304,7 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
                 <div className="card !border-accent-500/40 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
                   <div className="relative">
-                    <div className="text-xs uppercase tracking-wider text-accent-300 mb-2">
+                    <div className="text-xs uppercase tracking-wider text-coral mb-2">
                       {c.result}
                     </div>
                     <Typewrite
@@ -312,17 +312,17 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
                       className="text-2xl md:text-3xl font-bold leading-tight"
                       delay={0}
                     />
-                    <div className="text-xs italic text-slate-400 mt-2">{result.angle}</div>
+                    <div className="text-xs italic text-muted mt-2">{result.angle}</div>
                   </div>
                 </div>
 
                 <div className="card">
-                  <div className="text-xs uppercase tracking-wider text-slate-500 mb-2">
+                  <div className="text-xs uppercase tracking-wider text-muted mb-2">
                     {c.resultBody}
                   </div>
                   <Typewrite
                     text={result.body}
-                    className="text-base text-slate-200 whitespace-pre-wrap"
+                    className="text-base text-ink-900 whitespace-pre-wrap"
                     delay={result.headline.length * 18 + 200}
                   />
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -341,12 +341,12 @@ export default function LiveDemo({ locale }: { locale: Locale }) {
                 </div>
 
                 <div className="text-center">
-                  <span className="text-xs text-slate-500">{c.resultCta}</span>
+                  <span className="text-xs text-muted">{c.resultCta}</span>
                   <motion.div
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1.4, duration: 0.5 }}
-                    className="text-lg font-semibold text-accent-300 mt-1"
+                    className="text-lg font-semibold text-coral mt-1"
                   >
                     → {result.cta}
                   </motion.div>

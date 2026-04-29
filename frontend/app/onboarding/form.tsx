@@ -54,7 +54,7 @@ export default function OnboardingForm({ locale }: { locale: Locale }) {
         <h1 className="text-4xl font-bold mb-2">
           {tx("onboard.title.1")} <span className="text-gradient">{tx("onboard.title.2")}</span>
         </h1>
-        <p className="text-slate-400 mb-8">{tx("onboard.subtitle")}</p>
+        <p className="text-muted mb-8">{tx("onboard.subtitle")}</p>
       </Reveal>
 
       <form onSubmit={onSubmit} className="space-y-5">
@@ -108,7 +108,7 @@ export default function OnboardingForm({ locale }: { locale: Locale }) {
                 <label
                   key={tier.value}
                   className={`card cursor-pointer relative overflow-hidden transition-all ${
-                    form.tier === tier.value ? "!border-accent-500 ring-2 ring-accent-500/40" : ""
+                    form.tier === tier.value ? "!border-accent-500 ring-2 ring-coral/30" : ""
                   }`}
                 >
                   {form.tier === tier.value && (
@@ -127,7 +127,7 @@ export default function OnboardingForm({ locale }: { locale: Locale }) {
                       <span className={`w-2 h-2 rounded-full bg-gradient-to-br ${tier.accent}`} />
                       <span className="font-semibold">{tier.label}</span>
                     </div>
-                    <div className="text-sm text-slate-400 mt-1">{tx(tier.descKey)}</div>
+                    <div className="text-sm text-muted mt-1">{tx(tier.descKey)}</div>
                   </div>
                 </label>
               ))}

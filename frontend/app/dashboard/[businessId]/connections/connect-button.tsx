@@ -64,7 +64,7 @@ export function ConnectButton({
   }
 
   if (!oauthReady) {
-    return <span className="text-xs text-slate-500">—</span>;
+    return <span className="text-xs text-muted">—</span>;
   }
 
   return (

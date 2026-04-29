@@ -4,7 +4,6 @@ import FloatingOrbs from "@/components/FloatingOrbs";
 import Reveal from "@/components/Reveal";
 import TiltCard from "@/components/TiltCard";
 import SplitText from "@/components/SplitText";
-import ScatterText from "@/components/ScatterText";
 import MagneticButton from "@/components/MagneticButton";
 import Typewriter from "@/components/Typewriter";
 import AnimatedCounter from "@/components/AnimatedCounter";
@@ -36,7 +35,7 @@ export default async function HomePage() {
         <FloatingOrbs count={8} seed={1} />
         <div className="relative z-10 space-y-6">
           <Reveal dir="up">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-slate-300">
+            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-ink-800">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               {tx("hero.badge")}
             </div>
@@ -48,14 +47,14 @@ export default async function HomePage() {
             </span>
           </h1>
           <Reveal dir="up" delay={200}>
-            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted max-w-2xl mx-auto">
               {tx("hero.subtitle")}
             </p>
           </Reveal>
           <Reveal dir="up" delay={400}>
-            <div className="text-slate-500 text-sm font-mono min-h-[1.5em]">
+            <div className="text-muted text-sm font-mono min-h-[1.5em]">
               {tx("hero.now")}{" "}
-              <span className="text-slate-200">
+              <span className="text-ink-900">
                 <Typewriter
                   lines={[
                     tx("type.1"),
@@ -84,7 +83,7 @@ export default async function HomePage() {
           <Reveal dir="up" delay={800}>
             <div className="mt-8 max-w-xl mx-auto">
               <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 justify-between group" dir="ltr">
-                <code className="text-xs md:text-sm font-mono text-slate-300 truncate">
+                <code className="text-xs md:text-sm font-mono text-ink-800 truncate">
                   iwr -useb https://autocmo.app/install.ps1 | iex
                 </code>
                 <CopyButton
@@ -93,9 +92,9 @@ export default async function HomePage() {
                   variant="minimal"
                 />
               </div>
-              <div className="text-[11px] text-slate-500 mt-2 text-center">
+              <div className="text-[11px] text-muted mt-2 text-center">
                 {tx("hero.installer.note")} ·{" "}
-                <Link href="/install" className="hover:text-slate-300 underline underline-offset-2">
+                <Link href="/install" className="hover:text-ink-800 underline underline-offset-2">
                   {tx("hero.installer.more")}
                 </Link>
               </div>
@@ -117,14 +116,14 @@ export default async function HomePage() {
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">{tx("stats.tier")}</div>
+                  <div className="text-xs uppercase tracking-wider text-muted">{tx("stats.tier")}</div>
                   <IconBadge kind="bolt" color="indigo" size={36} />
                 </div>
                 <div className="text-3xl font-bold capitalize mt-3">{tier?.tier ?? "—"}</div>
-                <div className="text-sm text-slate-400 mt-1">
+                <div className="text-sm text-muted mt-1">
                   {tier?.llm_model} · {tier?.research_depth} {tx("stats.tier.research")}
                 </div>
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-muted">
                   {tier?.autonomous_agents
                     ? tx("stats.tier.auto")
                     : `${tx("stats.tier.loop")}: ${
@@ -143,13 +142,13 @@ export default async function HomePage() {
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-pink-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">{tx("stats.businesses")}</div>
+                  <div className="text-xs uppercase tracking-wider text-muted">{tx("stats.businesses")}</div>
                   <IconBadge kind="chart" color="rose" size={36} />
                 </div>
                 <div className="text-3xl font-bold mt-3">
                   <AnimatedCounter value={businesses.length} />
                 </div>
-                <div className="text-sm text-slate-400 mt-1">
+                <div className="text-sm text-muted mt-1">
                   {businesses.length > 0 ? tx("stats.businesses.managed") : tx("stats.businesses.none")}
                 </div>
               </div>
@@ -162,13 +161,13 @@ export default async function HomePage() {
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-wider text-slate-500">{tx("stats.connectors")}</div>
+                  <div className="text-xs uppercase tracking-wider text-muted">{tx("stats.connectors")}</div>
                   <IconBadge kind="globe" color="cyan" size={36} />
                 </div>
                 <div className="text-3xl font-bold mt-3">
                   <AnimatedCounter value={connectors.length} />
                 </div>
-                <div className="text-sm text-slate-400 mt-1 line-clamp-2">
+                <div className="text-sm text-muted mt-1 line-clamp-2">
                   {connectors.map((c) => c.display_name).join(" · ")}
                 </div>
               </div>
@@ -180,8 +179,8 @@ export default async function HomePage() {
       {/* Capabilities row */}
       <section>
         <Reveal dir="up">
-          <h2 className="text-2xl md:text-4xl font-semibold mb-6 text-center">
-            <ScatterText text={tx("agents.title")} />
+          <h2 className="text-3xl md:text-5xl font-semibold mb-8 max-w-2xl tracking-tightest">
+            {tx("agents.title")}
           </h2>
         </Reveal>
         <div className="grid md:grid-cols-5 gap-3">
@@ -193,10 +192,10 @@ export default async function HomePage() {
             { kind: "shield", color: "emerald", nameKey: "agents.optimizer", descKey: "agents.optimizer.desc" },
           ].map((a, i) => (
             <Reveal key={a.nameKey} dir="up" delay={i * 80}>
-              <div className="card hover:border-accent-500/40 transition-colors">
+              <div className="card card-hover">
                 <IconBadge kind={a.kind as any} color={a.color as any} size={44} />
                 <div className="mt-3 font-semibold">{tx(a.nameKey)}</div>
-                <div className="text-xs text-slate-400 mt-1">{tx(a.descKey)}</div>
+                <div className="text-xs text-muted mt-1">{tx(a.descKey)}</div>
               </div>
             </Reveal>
           ))}
@@ -217,11 +216,11 @@ export default async function HomePage() {
           <Reveal dir="up">
             <div className="card text-center py-20 relative overflow-hidden">
               <FloatingOrbs count={4} seed={3} colors={["#6366f1", "#ec4899"]} />
-              <div className="relative text-slate-400">
+              <div className="relative text-muted">
                 <div className="text-5xl mb-3 opacity-40">✨</div>
                 <div>
                   {tx("biz.empty")}{" "}
-                  <Link href="/onboarding" className="text-accent-400 hover:underline">
+                  <Link href="/onboarding" className="text-coral hover:underline">
                     {tx("biz.empty.cta")}
                   </Link>
                   .
@@ -239,7 +238,7 @@ export default async function HomePage() {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-lg font-semibold">{b.name}</div>
-                          <div className="text-sm text-slate-400 mt-1 line-clamp-2">
+                          <div className="text-sm text-muted mt-1 line-clamp-2">
                             {b.description || "—"}
                           </div>
                         </div>
@@ -247,7 +246,7 @@ export default async function HomePage() {
                           {b.tier}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 mt-4 text-xs text-slate-500">
+                      <div className="flex items-center gap-3 mt-4 text-xs text-muted">
                         {b.industry && <span>{b.industry}</span>}
                         {b.website && (
                           <>

@@ -83,8 +83,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0d12",
-  colorScheme: "dark",
+  themeColor: "#fdfcf8",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
 };
@@ -105,7 +105,7 @@ export default async function RootLayout({
         <AmbientBackground variant="mesh" intensity={0.55} />
         <div className="relative min-h-screen flex flex-col">
           <BackendBanner locale={locale} />
-          <header className="relative z-20 border-b border-ink-700/50 bg-ink-900/50 backdrop-blur-md sticky top-0">
+          <header className="relative z-20 border-b border-ink-300 bg-paper/50 backdrop-blur-md sticky top-0">
             <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2.5 font-semibold text-lg">
                 <span
@@ -133,20 +133,20 @@ export default async function RootLayout({
           <main className="relative z-10 flex-1 max-w-6xl mx-auto w-full px-6 py-8">
             {children}
           </main>
-          <footer className="relative z-10 border-t border-ink-700/50 py-6 mt-12 text-center text-xs text-slate-500">
+          <footer className="relative z-10 border-t border-ink-300 py-6 mt-12 text-center text-xs text-muted">
             <div>
               AutoCMO · {t(locale, "footer.tagline")} ·{" "}
-              <Link href="/docs" className="hover:text-slate-300">API</Link>
+              <Link href="/docs" className="hover:text-ink-800">API</Link>
               {" · "}
-              <Link href="/privacy" className="hover:text-slate-300">Privacy</Link>
+              <Link href="/privacy" className="hover:text-ink-800">Privacy</Link>
               {" · "}
-              <Link href="/terms" className="hover:text-slate-300">Terms</Link>
+              <Link href="/terms" className="hover:text-ink-800">Terms</Link>
               {" · "}
               <a
                 href="https://github.com/Ilya0527/biazmark"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-slate-300"
+                className="hover:text-ink-800"
               >
                 GitHub
               </a>

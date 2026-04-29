@@ -42,21 +42,21 @@ export default function BackendBanner({ locale = DEFAULT_LOCALE }: { locale?: Lo
 
   return (
     <div
-      className="relative z-30 border-b border-amber-500/20"
+      className="relative z-30 border-b border-ink-300"
       style={{ background: "linear-gradient(90deg, rgba(245,158,11,0.08), rgba(236,72,153,0.08))" }}
     >
       <div className="max-w-6xl mx-auto px-6 py-2.5 flex items-center justify-between gap-3 text-sm">
-        <div className="flex items-center gap-2 text-amber-200 min-w-0">
+        <div className="flex items-center gap-2 text-coral min-w-0">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
           <span className="truncate">
             <span className="font-semibold">{t(locale, "banner.title")}</span>{" "}
-            <span className="text-amber-100/80">
+            <span className="text-muted">
               {t(locale, "banner.body")}
             </span>
           </span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Link href="/install" className="btn-ghost !py-1 !px-2 text-amber-200 hover:text-white">
+          <Link href="/install" className="btn-ghost !py-1 !px-2 text-coral hover:text-ink-900">
             {t(locale, "banner.cta")}
           </Link>
           <button
@@ -66,7 +66,7 @@ export default function BackendBanner({ locale = DEFAULT_LOCALE }: { locale?: Lo
               sessionStorage.setItem("biazmark.banner.dismissed", "1");
               setState("dismissed");
             }}
-            className="text-amber-200/60 hover:text-amber-100 px-1"
+            className="text-coral/60 hover:text-coral px-1"
           >
             ×
           </button>

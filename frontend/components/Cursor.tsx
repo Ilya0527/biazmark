@@ -66,21 +66,21 @@ export default function Cursor() {
 
   return (
     <>
-      {/* Ring — large, lags more, blend mode */}
+      {/* Ring — soft, lags */}
       <motion.div
         aria-hidden
         style={{ x: sx, y: sy, translateX: "-50%", translateY: "-50%" }}
         animate={{
-          width: hovering ? 64 : 28,
-          height: hovering ? 64 : 28,
-          backgroundColor: hovering ? "rgba(167,139,250,0.18)" : "rgba(255,255,255,0)",
-          borderColor: hovering ? "rgba(244,114,182,0.6)" : "rgba(255,255,255,0.45)",
+          width: hovering ? 56 : 28,
+          height: hovering ? 56 : 28,
+          backgroundColor: hovering ? "rgba(220,76,62,0.10)" : "rgba(13,13,16,0)",
+          borderColor: hovering ? "rgba(220,76,62,0.7)" : "rgba(13,13,16,0.4)",
         }}
         transition={{ type: "spring", stiffness: 400, damping: 28 }}
-        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full border mix-blend-difference"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full border"
       >
         {text && (
-          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-white whitespace-nowrap">
+          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-ink-900 whitespace-nowrap">
             {text}
           </span>
         )}
@@ -88,10 +88,10 @@ export default function Cursor() {
       {/* Dot — tight, instant follow */}
       <motion.div
         aria-hidden
-        style={{ x, y, translateX: "-50%", translateY: "-50%" }}
+        style={{ x, y, translateX: "-50%", translateY: "-50%", background: "var(--ink)" }}
         animate={{ opacity: hovering ? 0 : 1, scale: hovering ? 0.4 : 1 }}
         transition={{ duration: 0.15 }}
-        className="pointer-events-none fixed top-0 left-0 z-[9999] w-1.5 h-1.5 rounded-full bg-white mix-blend-difference"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] w-1.5 h-1.5 rounded-full"
       />
     </>
   );

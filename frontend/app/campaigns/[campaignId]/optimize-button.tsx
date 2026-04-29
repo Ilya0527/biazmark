@@ -36,7 +36,7 @@ export function OptimizeButton({
       <button className="btn-primary" disabled={busy} onClick={onOptimize}>
         {busy ? tx("camp.opt.running") : tx("camp.opt.run")}
       </button>
-      {message && <div className="text-xs text-slate-400 max-w-xs text-end">{message}</div>}
+      {message && <div className="text-xs text-muted max-w-xs text-end">{message}</div>}
     </div>
   );
 }

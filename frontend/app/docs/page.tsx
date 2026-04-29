@@ -188,17 +188,17 @@ export default async function DocsPage() {
   return (
     <article className="max-w-3xl mx-auto py-8">
       <h1 className="text-4xl font-bold mb-3">{c.title}</h1>
-      <p className="text-slate-300 leading-relaxed mb-8">{c.intro}</p>
+      <p className="text-ink-800 leading-relaxed mb-8">{c.intro}</p>
       <h2 className="text-xl font-semibold mb-4">{c.quickstart}</h2>
       {c.sections.map((s) => (
         <section key={s.h} className="card mb-3">
           <h3 className="font-semibold mb-2">{s.h}</h3>
-          <pre className="text-xs font-mono text-slate-300 whitespace-pre-wrap leading-relaxed" dir="ltr">
+          <pre className="text-xs font-mono text-ink-800 whitespace-pre-wrap leading-relaxed" dir="ltr">
             {s.lines.join("\n")}
           </pre>
         </section>
       ))}
-      <p className="text-xs text-slate-500 mt-8">
+      <p className="text-xs text-muted mt-8">
         Need an API key? Run the service yourself (see <a href="/install" className="underline">/install</a>) — or contact us via the GitHub repo.
       </p>
     </article>

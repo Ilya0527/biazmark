@@ -28,11 +28,11 @@ export default async function ConnectionsPage({
   return (
     <div className="space-y-8">
       <div>
-        <Link href={`/dashboard/${businessId}`} className="text-sm text-slate-400 hover:text-slate-200">
+        <Link href={`/dashboard/${businessId}`} className="text-sm text-muted hover:text-ink-900">
           ← {biz.name}
         </Link>
         <h1 className="text-3xl font-bold mt-1">{tx("conn.title")}</h1>
-        <p className="text-slate-400 mt-1">{tx("conn.subtitle")}</p>
+        <p className="text-muted mt-1">{tx("conn.subtitle")}</p>
       </div>
 
       <section>
@@ -56,12 +56,12 @@ export default async function ConnectionsPage({
                     )}
                   </div>
                   {s.account_name && (
-                    <div className="text-sm text-slate-400 mt-1">{s.account_name}</div>
+                    <div className="text-sm text-muted mt-1">{s.account_name}</div>
                   )}
                   {s.oauth_supported && !s.oauth_configured && (
-                    <div className="text-xs text-slate-500 mt-2">
-                      <code className="text-accent-400">{s.platform.toUpperCase()}_APP_ID</code> /{" "}
-                      <code className="text-accent-400">_APP_SECRET</code> {tx("conn.oauth.hint")}
+                    <div className="text-xs text-muted mt-2">
+                      <code className="text-coral">{s.platform.toUpperCase()}_APP_ID</code> /{" "}
+                      <code className="text-coral">_APP_SECRET</code> {tx("conn.oauth.hint")}
                     </div>
                   )}
                 </div>
@@ -74,9 +74,9 @@ export default async function ConnectionsPage({
                 />
               </div>
               {s.connected && s.account_meta && Object.keys(s.account_meta).length > 0 && (
-                <details className="mt-3 text-xs text-slate-400">
-                  <summary className="cursor-pointer hover:text-slate-200">{tx("conn.acc.details")}</summary>
-                  <pre className="mt-2 text-[11px] bg-ink-900 rounded p-2 overflow-x-auto">
+                <details className="mt-3 text-xs text-muted">
+                  <summary className="cursor-pointer hover:text-ink-900">{tx("conn.acc.details")}</summary>
+                  <pre className="mt-2 text-[11px] bg-paper rounded p-2 overflow-x-auto">
                     {JSON.stringify(s.account_meta, null, 2)}
                   </pre>
                 </details>
@@ -88,12 +88,12 @@ export default async function ConnectionsPage({
 
       <section>
         <h2 className="font-semibold mb-3">{tx("conn.media.title")}</h2>
-        <div className="card divide-y divide-ink-700">
+        <div className="card divide-y divide-ink-300">
           {mediaProviders.map((p) => (
             <div key={p.name} className="py-3 first:pt-0 last:pb-0 flex items-center justify-between">
               <div>
                 <div className="font-medium capitalize">{p.name}</div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-muted">
                   {p.supports_video ? tx("conn.media.video") : tx("conn.media.images")}
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default async function ConnectionsPage({
               )}
             </div>
           ))}
-          <div className="pt-3 text-xs text-slate-500">{tx("conn.media.note")}</div>
+          <div className="pt-3 text-xs text-muted">{tx("conn.media.note")}</div>
         </div>
       </section>
     </div>

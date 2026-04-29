@@ -81,13 +81,13 @@ export default async function TermsPage() {
   const c = COPY[locale];
 
   return (
-    <article className="prose prose-invert max-w-3xl mx-auto py-8">
+    <article className="prose max-w-3xl mx-auto py-8">
       <h1 className="text-4xl font-bold mb-2">{c.title}</h1>
-      <p className="text-sm text-slate-500 mb-6">{c.updated}</p>
+      <p className="text-sm text-muted mb-6">{c.updated}</p>
       {c.sections.map((s) => (
         <section key={s.h} className="mt-8">
           <h2 className="text-xl font-semibold mb-2">{s.h}</h2>
-          <p className="text-slate-300 leading-relaxed">{s.p}</p>
+          <p className="text-ink-800 leading-relaxed">{s.p}</p>
         </section>
       ))}
     </article>

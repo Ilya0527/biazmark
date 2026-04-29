@@ -34,11 +34,11 @@ export default async function ContentPage({
   return (
     <div className="space-y-6">
       <div>
-        <Link href={`/dashboard/${businessId}`} className="text-sm text-slate-400 hover:text-slate-200">
+        <Link href={`/dashboard/${businessId}`} className="text-sm text-muted hover:text-ink-900">
           ← {biz.name}
         </Link>
         <h1 className="text-3xl font-bold mt-1">{tx("content.title")}</h1>
-        <p className="text-slate-400 mt-1">{tx("content.subtitle")}</p>
+        <p className="text-muted mt-1">{tx("content.subtitle")}</p>
       </div>
 
       <div className="flex items-center gap-1">
@@ -54,7 +54,7 @@ export default async function ContentPage({
       </div>
 
       {content.length === 0 ? (
-        <div className="card text-center text-slate-400 py-12">{tx("content.empty")}</div>
+        <div className="card text-center text-muted py-12">{tx("content.empty")}</div>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {content.map((v) => (
@@ -72,7 +72,7 @@ function ContentCard({ v, ctaLabel }: { v: ContentVariant; ctaLabel: string }) {
   return (
     <Link href={`/campaigns/${v.campaign_id}`} className="card card-hover block overflow-hidden">
       {v.media_url && (
-        <div className="-m-6 mb-4 bg-ink-900">
+        <div className="-m-6 mb-4 bg-paper">
           <img src={v.media_url} alt={v.headline} className="w-full max-h-64 object-cover" />
         </div>
       )}
@@ -91,13 +91,13 @@ function ContentCard({ v, ctaLabel }: { v: ContentVariant; ctaLabel: string }) {
         </span>
       </div>
       <div className="font-semibold mb-1 line-clamp-2">{v.headline}</div>
-      <div className="text-sm text-slate-300 line-clamp-3 whitespace-pre-wrap">
+      <div className="text-sm text-ink-800 line-clamp-3 whitespace-pre-wrap">
         {isArticle ? v.body : isEmail ? (v.meta?.preview || v.body) : v.body}
       </div>
       {v.cta && (
         <div className="mt-3 text-xs">
-          <span className="text-slate-500">{ctaLabel} · </span>
-          <span className="text-accent-400">{v.cta}</span>
+          <span className="text-muted">{ctaLabel} · </span>
+          <span className="text-coral">{v.cta}</span>
         </div>
       )}
     </Link>
