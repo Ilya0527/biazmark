@@ -4,6 +4,8 @@ import Link from "next/link";
 import AmbientBackground from "@/components/AmbientBackground";
 import BackendBanner from "@/components/BackendBanner";
 import LangSwitcher from "@/components/LangSwitcher";
+import Cursor from "@/components/Cursor";
+import SmoothScroll from "@/components/SmoothScroll";
 import { t, RTL } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 
@@ -98,6 +100,8 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir}>
       <body>
+        <SmoothScroll />
+        <Cursor />
         <AmbientBackground variant="mesh" intensity={0.55} />
         <div className="relative min-h-screen flex flex-col">
           <BackendBanner locale={locale} />

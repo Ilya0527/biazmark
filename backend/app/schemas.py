@@ -9,6 +9,22 @@ from pydantic import BaseModel, Field
 from app.config import Tier
 
 
+class DemoRequest(BaseModel):
+    """Public, free, rate-limited demo endpoint — used by the homepage widget
+    that lets visitors taste the product before signing up."""
+
+    industry: str = Field(min_length=2, max_length=80)
+    description: str = Field(min_length=2, max_length=500)
+
+
+class DemoResponse(BaseModel):
+    headline: str
+    angle: str
+    body: str
+    cta: str
+    hashtags: list[str]
+
+
 class BusinessCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     description: str = ""

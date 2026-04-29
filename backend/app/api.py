@@ -38,6 +38,8 @@ from app.schemas import (
     ConnectorOut,
     ConnectorStatusOut,
     ContentVariantOut,
+    DemoRequest,
+    DemoResponse,
     MediaAssetOut,
     MetricOut,
     OAuthStartOut,
@@ -70,6 +72,73 @@ async def current_tier() -> TierOut:
 @router.get("/connectors", response_model=list[ConnectorOut])
 async def list_connectors() -> list[ConnectorOut]:
     return [ConnectorOut(**c) for c in registry.available()]
+
+
+# ---------------- public demo (homepage widget) ----------------
+
+# Per-IP sliding window for the demo endpoint — much stricter than the global
+# rate limiter. 5 requests per hour per IP. In-memory; resets on restart.
+_DEMO_HITS: dict[str, list[float]] = {}
+_DEMO_LIMIT = 5
+_DEMO_WINDOW = 3600.0
+
+
+@router.post("/demo", response_model=DemoResponse)
+async def public_demo(payload: DemoRequest, request: Request) -> DemoResponse:
+    """Public, free, no-auth taste of the product. The homepage widget calls
+    this with a 1-line business description; we return one marketing angle so
+    the visitor can *see* the product work before they create an account."""
+    import time
+
+    from app.logging_config import get_logger
+    log = get_logger(__name__)
+
+    # Per-IP rate limit (5/hour). The frontend pre-warns above 3.
+    ip = request.headers.get("fly-client-ip") or request.headers.get("x-forwarded-for", "")
+    ip = ip.split(",")[0].strip() or (request.client.host if request.client else "unknown")
+    now = time.monotonic()
+    hits = _DEMO_HITS.setdefault(ip, [])
+    hits[:] = [t for t in hits if t > now - _DEMO_WINDOW]
+    if len(hits) >= _DEMO_LIMIT:
+        retry = int(_DEMO_WINDOW - (now - hits[0])) + 1
+        raise HTTPException(
+            status_code=429,
+            detail={"error": "demo_rate_limited", "retry_after_seconds": retry,
+                    "message": f"Demo capped at {_DEMO_LIMIT}/hour per IP. Sign up for unlimited."},
+        )
+    hits.append(now)
+
+    # Use Claude Haiku regardless of configured tier — fastest + cheapest.
+    from app.config import Tier
+    from app.llm import LLMClient
+    client = LLMClient(tier_override=Tier.BASIC)
+
+    system = (
+        "You are AutoCMO's senior marketing strategist. The visitor will share a "
+        "very short business brief. Return ONE punchy marketing angle they can "
+        "post tomorrow. Be specific, concrete, and brand-appropriate. Output JSON only."
+    )
+    user = (
+        f"Industry: {payload.industry}\n"
+        f"Business: {payload.description}\n\n"
+        "Return JSON: { headline (max 60 chars), angle (one-sentence positioning), "
+        "body (max 240 chars, post-ready), cta (max 30 chars), hashtags (3-5 items). }"
+    )
+    schema = '{"headline":"...","angle":"...","body":"...","cta":"...","hashtags":["..."]}'
+
+    try:
+        data = await client.complete_json(system, user, schema_hint=schema, max_tokens=600)
+    except Exception as e:
+        log.warning("demo_llm_failed", error=str(e))
+        raise HTTPException(503, "Demo service temporarily unavailable. Try again in a moment.") from e
+
+    return DemoResponse(
+        headline=str(data.get("headline", ""))[:80],
+        angle=str(data.get("angle", ""))[:200],
+        body=str(data.get("body", ""))[:280],
+        cta=str(data.get("cta", ""))[:40],
+        hashtags=[str(h)[:30] for h in (data.get("hashtags") or [])][:5],
+    )
 
 
 @router.get("/media/providers")

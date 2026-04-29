@@ -103,7 +103,7 @@ class Settings(BaseSettings):
     biazmark_api_key: str = ""
     # Comma-separated list of paths (prefixes) that skip auth. Health + OAuth
     # callbacks must always be reachable without the key.
-    auth_skip_paths: str = "/,/healthz,/readyz,/api/health,/api/oauth/callback,/docs,/openapi.json,/media"
+    auth_skip_paths: str = "/,/healthz,/readyz,/api/health,/api/demo,/api/oauth/callback,/docs,/openapi.json,/media"
 
     # Rate limiting
     rate_limit_per_minute: int = 60

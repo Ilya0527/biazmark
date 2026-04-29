@@ -4,11 +4,13 @@ import FloatingOrbs from "@/components/FloatingOrbs";
 import Reveal from "@/components/Reveal";
 import TiltCard from "@/components/TiltCard";
 import SplitText from "@/components/SplitText";
+import ScatterText from "@/components/ScatterText";
 import MagneticButton from "@/components/MagneticButton";
 import Typewriter from "@/components/Typewriter";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import IconBadge from "@/components/IconBadge";
 import CopyButton from "@/components/CopyButton";
+import LiveDemo from "@/components/LiveDemo";
 import { t } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 
@@ -102,6 +104,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* THE LIVE AI DEMO — surprise widget */}
+      <section>
+        <LiveDemo locale={locale} />
+      </section>
+
       {/* Stats */}
       <section className="grid md:grid-cols-3 gap-4">
         <Reveal dir="up" delay={0}>
@@ -173,7 +180,9 @@ export default async function HomePage() {
       {/* Capabilities row */}
       <section>
         <Reveal dir="up">
-          <h2 className="text-2xl font-semibold mb-6">{tx("agents.title")}</h2>
+          <h2 className="text-2xl md:text-4xl font-semibold mb-6 text-center">
+            <ScatterText text={tx("agents.title")} />
+          </h2>
         </Reveal>
         <div className="grid md:grid-cols-5 gap-3">
           {[

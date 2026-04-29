@@ -12,8 +12,20 @@
 @layer base {
   html {
     color-scheme: dark;
-    scroll-behavior: smooth;
     overflow-x: clip;
+  }
+  /* When the custom cursor mounts (only on hover-capable devices), hide native */
+  html.custom-cursor,
+  html.custom-cursor * {
+    cursor: none !important;
+  }
+  /* Lenis smooth-scroll classes — added by lib/SmoothScroll on init */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
   body {
     @apply bg-ink-900 text-slate-100 antialiased;
