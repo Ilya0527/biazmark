@@ -103,6 +103,39 @@
     border-color: rgba(13,13,16,0.18);
   }
 
+  /* Info card — display-only (stats, agent grid). Hover gives small life
+     signals: corner accent dot fades in, icon does a gentle wiggle, the
+     big number nudges up. NEVER use on cards wrapped in Link/button —
+     the hover would mis-train users about what's clickable. */
+  .card-info {
+    transition: transform 320ms cubic-bezier(.2,.8,.2,1), box-shadow 320ms ease;
+    position: relative;
+  }
+  .card-info::after {
+    content: "";
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: var(--coral);
+    opacity: 0;
+    transform: scale(0.3);
+    transition: opacity 350ms ease, transform 350ms cubic-bezier(.2,.8,.2,1);
+    pointer-events: none;
+  }
+  [dir="rtl"] .card-info::after { right: auto; left: 14px; }
+  .card-info svg { transition: transform 380ms cubic-bezier(.2,.8,.2,1); }
+  .card-info .info-num { transition: transform 320ms cubic-bezier(.2,.8,.2,1), letter-spacing 320ms ease; }
+  @media (hover: hover) {
+    .card-info:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(13,13,16,0.05), 0 24px 48px rgba(13,13,16,0.10);
+    }
+    .card-info:hover::after { opacity: 1; transform: scale(1); }
+    .card-info:hover svg { transform: rotate(7deg) scale(1.08); }
+    .card-info:hover .info-num { transform: translateY(-2px); letter-spacing: -0.04em; }
+  }
+
   .glass {
     background: rgba(253, 252, 248, 0.85);
     backdrop-filter: blur(12px);

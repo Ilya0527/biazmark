@@ -112,14 +112,14 @@ export default async function HomePage() {
       <section className="grid md:grid-cols-3 gap-4">
         <Reveal dir="up" delay={0}>
           <TiltCard intensity={6}>
-            <div className="card relative overflow-hidden">
+            <div className="card card-info relative overflow-hidden">
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <div className="text-xs uppercase tracking-wider text-muted">{tx("stats.tier")}</div>
                   <IconBadge kind="bolt" color="indigo" size={36} />
                 </div>
-                <div className="text-3xl font-bold capitalize mt-3">{tier?.tier ?? "—"}</div>
+                <div className="text-3xl font-bold capitalize mt-3 info-num">{tier?.tier ?? "—"}</div>
                 <div className="text-sm text-muted mt-1">
                   {tier?.llm_model} · {tier?.research_depth} {tx("stats.tier.research")}
                 </div>
@@ -138,14 +138,14 @@ export default async function HomePage() {
         </Reveal>
         <Reveal dir="up" delay={100}>
           <TiltCard intensity={6}>
-            <div className="card relative overflow-hidden">
+            <div className="card card-info relative overflow-hidden">
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-pink-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <div className="text-xs uppercase tracking-wider text-muted">{tx("stats.businesses")}</div>
                   <IconBadge kind="chart" color="rose" size={36} />
                 </div>
-                <div className="text-3xl font-bold mt-3">
+                <div className="text-3xl font-bold mt-3 info-num">
                   <AnimatedCounter value={businesses.length} />
                 </div>
                 <div className="text-sm text-muted mt-1">
@@ -157,14 +157,14 @@ export default async function HomePage() {
         </Reveal>
         <Reveal dir="up" delay={200}>
           <TiltCard intensity={6}>
-            <div className="card relative overflow-hidden">
+            <div className="card card-info relative overflow-hidden">
               <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <div className="text-xs uppercase tracking-wider text-muted">{tx("stats.connectors")}</div>
                   <IconBadge kind="globe" color="cyan" size={36} />
                 </div>
-                <div className="text-3xl font-bold mt-3">
+                <div className="text-3xl font-bold mt-3 info-num">
                   <AnimatedCounter value={connectors.length} />
                 </div>
                 <div className="text-sm text-muted mt-1 line-clamp-2">
@@ -192,7 +192,7 @@ export default async function HomePage() {
             { kind: "shield", color: "emerald", nameKey: "agents.optimizer", descKey: "agents.optimizer.desc" },
           ].map((a, i) => (
             <Reveal key={a.nameKey} dir="up" delay={i * 80}>
-              <div className="card card-hover">
+              <div className="card card-info">
                 <IconBadge kind={a.kind as any} color={a.color as any} size={44} />
                 <div className="mt-3 font-semibold">{tx(a.nameKey)}</div>
                 <div className="text-xs text-muted mt-1">{tx(a.descKey)}</div>

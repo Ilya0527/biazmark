@@ -215,9 +215,9 @@ export default async function DashboardPage({
 
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="card">
+    <div className="card card-info">
       <div className="text-xs uppercase tracking-wider text-muted">{label}</div>
-      <div className="text-2xl font-semibold mt-1">{value}</div>
+      <div className="text-2xl font-semibold mt-1 info-num">{value}</div>
     </div>
   );
 }
